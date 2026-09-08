@@ -5,12 +5,12 @@ function Home() {
         <a href="/" className="name">
           권재원 <span>Kwon Jaewon</span>
         </a>
-        <p className="role">frontend learner · interactive web</p>
+        <p className="role">AIaaS learner · interactive web</p>
       </header>
 
       <section className="intro">
         <div className="monogram" aria-hidden="true">
-          <span>KWJ</span>
+          <span>KJW</span>
         </div>
         <p>
           웹 개발을 배우며, 누르면 반응하고 움직이는 작은 화면을 만듭니다.
@@ -25,6 +25,10 @@ function Home() {
           <li>
             <a href="#assignment-breaker">과제 부수기</a>
             <span> 키보드로 과제를 무너뜨리는 인터랙티브 웹</span>
+          </li>
+          <li>
+            <a href="#assignment-submit">과제 제출</a>
+            <span> 도망가는 버튼을 붙잡아 과제를 제출하는 인터랙션</span>
           </li>
         </ul>
       </section>
