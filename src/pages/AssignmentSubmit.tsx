@@ -30,19 +30,8 @@ function AssignmentSubmit() {
         </p>
 
         <div className="button-demo">
-          <Button
-            variant="outline"
-            onClick={submit}
-          >
+          <Button variant="outline" onClick={submit}>
             과제 제출
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            aria-label="과제 제출"
-            onClick={submit}
-          >
-            <ArrowUpIcon size={18} />
           </Button>
         </div>
       </section>
