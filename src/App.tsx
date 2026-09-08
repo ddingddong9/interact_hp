@@ -1,12 +1,8 @@
 import { useEffect, useState } from 'react';
-import type { CSSProperties } from 'react';
-
-type FlyingLetter = {
-  id: number;
-  text: string;
-  x: number;
-  y: number;
-};
+import Assignment from './components/Assignment';
+import FlyingLetters, { type FlyingLetter } from './components/FlyingLetters';
+import Guide from './components/Guide';
+import Monkey from './components/Monkey';
 
 const MAX_HITS = 12;
 
@@ -54,27 +50,10 @@ function App() {
 
   return (
     <main className="stage">
-      <h1 key={hitCount} className={`assignment ${destroyed ? 'destroyed' : 'hit'}`}>
-        과제
-      </h1>
-
-      <img className={`monkey ${monkeySide}`} src="/keyboard-monkey.png" alt="키보드 앞에 앉아 있는 원숭이" />
-
-      {letters.map((letter) => (
-        <span
-          className="flying-letter"
-          key={letter.id}
-          style={{ '--x': `${letter.x}vw`, '--y': `${letter.y}vh` } as CSSProperties}
-        >
-          {letter.text}
-        </span>
-      ))}
-
-      <div className="guide">
-        <strong>TYPE TO DESTROY</strong>
-        <p>{destroyed ? '과제 끝! ESC를 눌러 다시 시작' : `아무 키나 누르세요 · ${hitCount}/${MAX_HITS}`}</p>
-      </div>
-
+      <Assignment hitCount={hitCount} destroyed={destroyed} />
+      <Monkey side={monkeySide} />
+      <FlyingLetters letters={letters} />
+      <Guide hitCount={hitCount} maxHits={MAX_HITS} destroyed={destroyed} />
       <button onClick={reset}>다시 시작 ESC</button>
     </main>
   );
