@@ -65,24 +65,7 @@ a { color: inherit; }
 .submit-panel > p:not(.submit-label) { max-width: 380px; margin: 26px 0 0; color: #a8aaa4; font-size: 17px; line-height: 1.7; }
 .button-demo { display: flex; align-items: center; gap: 10px; min-height: 190px; margin-top: 18px; }
 
-.ui-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 44px;
-  padding: 0 18px;
-  border: 1px solid #545650;
-  border-radius: 10px;
-  background: transparent;
-  color: #f4f4ef;
-  font: 600 14px Arial, sans-serif;
-  cursor: pointer;
-  transform: translate(var(--dodge-x, 0), var(--dodge-y, 0));
-  transition: transform 180ms ease, background 150ms ease, border-color 150ms ease;
-}
-.ui-button:hover { border-color: #f4f4ef; background: #292a27; }
-.ui-button.icon { width: 44px; padding: 0; }
-.ui-button:focus-visible { outline: 2px solid #ff665c; outline-offset: 3px; }
+.button-demo button { cursor: pointer; }
 
 .stage {
   position: relative;
