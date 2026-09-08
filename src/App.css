@@ -42,8 +42,9 @@ a { color: inherit; }
 
 .project-section { margin-top: 34px; }
 .section-label { margin: 0; color: #999b95; font-size: 15px; }
-.project-list { margin: 12px 0 0; padding-left: 22px; font-size: 17px; line-height: 1.8; }
-.project-list a { text-underline-offset: 3px; }
+.project-list { margin: 12px 0 0; padding: 0; font-size: 17px; line-height: 1.8; }
+.project-list a { text-decoration: underline; text-underline-offset: 3px; }
+.project-marker { color: #f4f4ef !important; }
 .project-list span { color: #999b95; }
 .home footer { margin-top: 64px; color: #777a74; font-family: monospace; font-size: 12px; }
 

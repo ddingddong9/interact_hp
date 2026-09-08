@@ -23,12 +23,14 @@ function Home() {
         <p className="section-label">프로젝트</p>
         <ul className="project-list">
           <li>
+            <span className="project-marker" aria-hidden="true">* </span>
             <a href="#assignment-breaker">과제 부수기</a>
-            <span> 키보드로 과제를 무너뜨리는 인터랙티브 웹</span>
+            <span> 과제를 무너뜨리는 인터랙티브 웹</span>
           </li>
           <li>
+            <span className="project-marker" aria-hidden="true">* </span>
             <a href="#assignment-submit">과제 제출</a>
-            <span> 도망가는 버튼을 붙잡아 과제를 제출하는 인터랙션</span>
+            <span> 과제를 제출하는 인터랙션</span>
           </li>
         </ul>
       </section>
