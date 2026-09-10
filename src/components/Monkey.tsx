@@ -8,6 +8,7 @@ function Monkey({ side }: MonkeyProps) {
       className={`monkey ${side}`}
       src="/keyboard-monkey.png"
       alt="키보드 앞에 앉아 있는 원숭이"
+      draggable={false}
     />
   );
 }

@@ -1,33 +1,39 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import ThemeToggle from './components/ThemeToggle';
+import PageTransition from './components/PageTransition';
 import Home from './pages/Home';
 import AssignmentBreaker from './pages/AssignmentBreaker';
 import AssignmentSubmit from './pages/AssignmentSubmit';
+import MousePlayground from './pages/MousePlayground';
+
+const titles: Record<string, string> = {
+  '#home': '권재원 Kwon Jaewon',
+  '#assignment-breaker': '남겨진 점 · 권재원',
+  '#assignment-submit': '끌림의 좌표 · 권재원',
+  '#orbit-playground': '말랑한 궤도 · 권재원',
+  '#type-playground': '흩어지는 글자 · 권재원',
+};
+
+function getPage() {
+  const hash = window.location.hash;
+  return Object.prototype.hasOwnProperty.call(titles, hash) ? hash : '#home';
+}
+
+function Page({ page }: { page: string }) {
+  useEffect(() => { document.title = titles[page]; }, [page]);
+
+  // 주소에 맞는 화면을 선택합니다.
+  let content = <Home />;
+  if (page === '#assignment-breaker') content = <AssignmentBreaker />;
+  if (page === '#assignment-submit') content = <AssignmentSubmit />;
+  if (page === '#orbit-playground') content = <MousePlayground key="orbit" mode="orbit" />;
+  if (page === '#type-playground') content = <MousePlayground key="type" mode="type" />;
+
+  return <><ThemeToggle visible={page === '#home'} />{content}</>;
+}
 
 function App() {
-  const [page, setPage] = useState<string>(window.location.hash);
-
-  useEffect(() => {
-    const handleHashChange = () => {
-      const nextPage = window.location.hash;
-      setPage(nextPage);
-      if (nextPage === '#assignment-breaker') document.title = '과제 부수기 · 권재원';
-      else if (nextPage === '#assignment-submit') document.title = '과제 제출 · 권재원';
-      else document.title = '권재원 Kwon Jaewon';
-    };
-    handleHashChange();
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
-  }, []);
-
-  if (page === '#assignment-breaker') {
-    return <AssignmentBreaker />;
-  }
-
-  if (page === '#assignment-submit') {
-    return <AssignmentSubmit />;
-  }
-
-  return <Home />;
+  return <PageTransition getPage={getPage}>{(page) => <Page page={page} />}</PageTransition>;
 }
 
 export default App;

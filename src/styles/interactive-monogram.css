@@ -1,0 +1,71 @@
+.monogram.interactive-monogram {
+  position: relative;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  appearance: none;
+  font: inherit;
+  cursor: pointer;
+  perspective: 750px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.interactive-monogram::before {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--mono-x, 50%) var(--mono-y, 50%), color-mix(in srgb, var(--site-surface-text) 13%, transparent), transparent 58%);
+  opacity: 0;
+  transition: opacity 250ms ease;
+  content: '';
+  pointer-events: none;
+}
+
+.interactive-monogram:hover::before { opacity: 1; }
+
+.interactive-monogram:focus-visible {
+  outline: 2px solid var(--site-text);
+  outline-offset: 5px;
+}
+
+.monogram.interactive-monogram .interactive-monogram__word {
+  position: relative;
+  transform: translateX(-0.04em) rotateX(var(--mono-rotate-x, 0deg)) rotateY(var(--mono-rotate-y, 0deg));
+  transition: transform 180ms ease-out;
+  pointer-events: none;
+}
+
+.interactive-monogram__word > i {
+  display: inline-block;
+  font-style: normal;
+}
+
+.interactive-monogram__word > i:nth-child(1) { --scatter-x: -0.3em; --scatter-y: -0.25em; --scatter-angle: -18deg; }
+.interactive-monogram__word > i:nth-child(2) { --scatter-x: 0em; --scatter-y: 0.26em; --scatter-angle: 12deg; }
+.interactive-monogram__word > i:nth-child(3) { --scatter-x: 0.28em; --scatter-y: -0.16em; --scatter-angle: 20deg; }
+
+.interactive-monogram.is-playing .interactive-monogram__word > i {
+  animation: monogram-scatter 800ms both;
+}
+
+.interactive-monogram__hint {
+  position: absolute;
+  right: 20px;
+  bottom: 17px;
+  font: 11px monospace;
+  letter-spacing: 0.04em;
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+@keyframes monogram-scatter {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  28% { transform: translate(var(--scatter-x), var(--scatter-y)) rotate(var(--scatter-angle)) scale(0.94); }
+  58% { transform: translate(0, -0.04em) rotate(-2deg) scale(1.025); }
+  78% { transform: translate(0, 0.015em) rotate(1deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .monogram.interactive-monogram .interactive-monogram__word { transform: translateX(-0.04em); transition: none; }
+  .interactive-monogram.is-playing .interactive-monogram__word > i { animation: none; }
+  .interactive-monogram::before { transition: none; }
+}

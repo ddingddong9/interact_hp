@@ -1,17 +1,14 @@
+import Header from '../components/Header';
+import InteractiveMonogram from '../components/InteractiveMonogram';
+import ProjectList from '../components/ProjectList';
+
 function Home() {
   return (
-    <main className="home">
-      <header className="home-header">
-        <a href="/" className="name">
-          권재원 <span>Kwon Jaewon</span>
-        </a>
-        <p className="role">AIaaS learner · interactive web</p>
-      </header>
+    <main className="home" data-page-scroll>
+      <Header />
 
       <section className="intro">
-        <div className="monogram" aria-hidden="true">
-          <span>KJW</span>
-        </div>
+        <InteractiveMonogram />
         <p>
           웹 개발을 배우며, 누르면 반응하고 움직이는 작은 화면을 만듭니다.
           <br />
@@ -19,21 +16,7 @@ function Home() {
         </p>
       </section>
 
-      <section className="project-section">
-        <p className="section-label">프로젝트</p>
-        <ul className="project-list">
-          <li>
-            <span className="project-marker" aria-hidden="true">• </span>
-            <a href="#assignment-breaker">과제 부수기</a>
-            <span> 과제를 무너뜨리는 인터랙티브 웹</span>
-          </li>
-          <li>
-            <span className="project-marker" aria-hidden="true">• </span>
-            <a href="#assignment-submit">과제 제출</a>
-            <span> 과제를 제출하는 인터랙션</span>
-          </li>
-        </ul>
-      </section>
+      <ProjectList />
 
       <footer>© 2026 권재원</footer>
     </main>

@@ -17,6 +17,7 @@ function FlyingLetters({ letters }: FlyingLettersProps) {
       {letters.map((letter) => (
         <span
           className="flying-letter"
+          aria-hidden="true"
           key={letter.id}
           style={{ '--x': `${letter.x}vw`, '--y': `${letter.y}vh` } as CSSProperties}
         >
