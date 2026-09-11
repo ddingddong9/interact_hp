@@ -22,6 +22,7 @@ function ProjectPoster({ href, title, eyebrow, description, number }: Props) {
       aria-label={`${title} 프로젝트 열기`}
       data-poster-title={title}
       data-poster-number={formattedNumber}
+      data-transition-href={href}
       draggable={false}
       style={{
         '--poster-hue': hue,

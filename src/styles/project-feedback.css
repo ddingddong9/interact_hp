@@ -458,3 +458,6 @@
   .typed-glyphs { display: none; }
   .submit-fill { transform: translate(-50%, -50%) scale(14); }
 }
+
+/* Keep each experiment focused on its visual interaction. */
+.submit-feedback { min-height: 320px; height: 100dvh; }

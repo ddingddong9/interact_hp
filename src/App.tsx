@@ -8,10 +8,10 @@ import MousePlayground from './pages/MousePlayground';
 
 const titles: Record<string, string> = {
   '#home': '권재원 Kwon Jaewon',
-  '#assignment-breaker': '남겨진 점 · 권재원',
-  '#assignment-submit': '끌림의 좌표 · 권재원',
-  '#orbit-playground': '말랑한 궤도 · 권재원',
-  '#type-playground': '흩어지는 글자 · 권재원',
+  '#assignment-breaker': 'Nebula Drift · Kwon Jaewon',
+  '#assignment-submit': 'Longcat · Kwon Jaewon',
+  '#orbit-playground': 'Soft Orbit · Kwon Jaewon',
+  '#type-playground': 'Type Drift · Kwon Jaewon',
 };
 
 function getPage() {

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import type {
   KeyboardEvent as ReactKeyboardEvent,
   MouseEvent as ReactMouseEvent,
@@ -6,37 +6,13 @@ import type {
   WheelEvent as ReactWheelEvent,
 } from 'react';
 import ProjectPoster from './ProjectPoster';
-import type { ProjectPosterData } from './ProjectPoster';
+import { projects } from '../data/projects';
 import '../styles/project-shelf.css';
 
-const projects: ProjectPosterData[] = [
-  {
-    href: '#assignment-breaker',
-    title: '남겨진 점',
-    eyebrow: 'POINTER / MEMORY',
-    description: 'LEAVE A POINT BEHIND',
-  },
-  {
-    href: '#assignment-submit',
-    title: '끌림의 좌표',
-    eyebrow: 'POINTER / MAGNETISM',
-    description: 'BEND THE FIELD',
-  },
-  {
-    href: '#orbit-playground',
-    title: '말랑한 궤도',
-    eyebrow: 'POINTER / CANVAS',
-    description: 'FOLLOW THE ORBIT',
-  },
-  {
-    href: '#type-playground',
-    title: '흩어지는 글자',
-    eyebrow: 'TYPE / MOTION',
-    description: 'BREAK THE LETTERS APART',
-  },
-];
+
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+let rememberedProjectIndex = 0;
 
 function ProjectList() {
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -45,7 +21,7 @@ function ProjectList() {
   const positionRef = useRef(0);
   const velocityRef = useRef(0);
   const animationRef = useRef<number | null>(null);
-  const activeIndexRef = useRef(0);
+  const activeIndexRef = useRef(rememberedProjectIndex);
   const initializedRef = useRef(false);
   const suppressClickRef = useRef(false);
   const boundsRef = useRef({ min: 0, max: 0 });
@@ -60,7 +36,7 @@ function ProjectList() {
     modified: false,
   });
   const reducedMotionRef = useRef(false);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(rememberedProjectIndex);
 
   const cancelAnimation = useCallback(() => {
     if (animationRef.current !== null) cancelAnimationFrame(animationRef.current);
@@ -100,6 +76,7 @@ function ProjectList() {
     if (closestIndex !== activeIndexRef.current) {
       posterRefs.current[activeIndexRef.current]?.classList.remove('is-active');
       activeIndexRef.current = closestIndex;
+      rememberedProjectIndex = closestIndex;
       posterRefs.current[closestIndex]?.classList.add('is-active');
       setActiveIndex(closestIndex);
     }
@@ -179,7 +156,7 @@ function ProjectList() {
     animationRef.current = requestAnimationFrame(step);
   }, [cancelAnimation, paint, snapTo]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const viewport = viewportRef.current;
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     if (!viewport) return;
@@ -195,9 +172,9 @@ function ProjectList() {
       };
 
       if (!initializedRef.current) {
-        positionRef.current = boundsRef.current.max;
+        positionRef.current = getTargetPosition(activeIndexRef.current);
         initializedRef.current = true;
-        posters[0].classList.add('is-active');
+        posters[activeIndexRef.current]?.classList.add('is-active');
       } else {
         positionRef.current = getTargetPosition(activeIndexRef.current);
       }
@@ -209,7 +186,7 @@ function ProjectList() {
     observer.observe(viewport);
     posterRefs.current.forEach((poster) => { if (poster) observer.observe(poster); });
     motionQuery.addEventListener('change', updateMotionPreference);
-    requestAnimationFrame(measure);
+    measure();
 
     return () => {
       cancelAnimation();

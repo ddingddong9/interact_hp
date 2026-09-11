@@ -2,14 +2,14 @@ import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { flushSync } from 'react-dom';
 import BookOpening from './BookOpening';
-import type { SelectedBook } from './BookOpening';
+import type { SelectedBook, TransitionDirection } from './BookOpening';
 import { playPageMotion } from './pageMotion';
 
 type Props = { getPage: () => string; children: (page: string) => ReactNode };
 
 function PageTransition({ getPage, children }: Props) {
   const [page, setPage] = useState(getPage);
-  const [book, setBook] = useState<SelectedBook | null>(null);
+  const [transitionPoster, setTransitionPoster] = useState<{ book: SelectedBook; direction: TransitionDirection } | null>(null);
   const surfaceRef = useRef<HTMLDivElement>(null);
   const openingRef = useRef<HTMLDivElement>(null);
   const currentPage = useRef(page);
@@ -20,6 +20,7 @@ function PageTransition({ getPage, children }: Props) {
     let navigation = 0;
     let controller: AbortController | null = null;
     let pendingBook: SelectedBook | null = null;
+    let lastProject: SelectedBook | null = null;
     let hiddenBook: { element: HTMLElement; visibility: string } | null = null;
     const scrollPositions = new Map<string, { top: number; shelf: number }>();
 
@@ -32,27 +33,49 @@ function PageTransition({ getPage, children }: Props) {
     function selectBook(event: MouseEvent) {
       pendingBook = null;
       if (event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
-      const link = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>('a.project-book') : null;
+      const link = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>('a.project-poster') : null;
       if (!link || (link.target && link.target !== '_self')) return;
       const bounds = link.getBoundingClientRect();
       const style = getComputedStyle(link);
+      const artwork = link.cloneNode(true) as HTMLElement;
+      const originals = [link, ...link.querySelectorAll<HTMLElement>('*')];
+      const copies = [artwork, ...artwork.querySelectorAll<HTMLElement>('*')];
+      originals.forEach((element, index) => {
+        const computed = getComputedStyle(element);
+        for (const name of Array.from(computed)) copies[index].style.setProperty(name, computed.getPropertyValue(name));
+        copies[index].style.transition = 'none';
+        copies[index].style.animation = 'none';
+        copies[index].removeAttribute('id');
+      });
+      Object.assign(artwork.style, {
+        position: 'relative', left: '0px', top: '0px', margin: '0px',
+        width: `${link.offsetWidth}px`, height: `${link.offsetHeight}px`,
+        transform: 'none', visibility: 'visible', pointerEvents: 'none',
+      });
+      artwork.removeAttribute('href');
+      artwork.tabIndex = -1;
       pendingBook = {
-        href: link.hash, title: link.dataset.bookTitle ?? '', number: (link.dataset.bookNumber ?? '').padStart(2, '0'),
-        color: style.getPropertyValue('--book-color'), ink: style.getPropertyValue('--book-ink'),
+        href: link.hash, title: link.dataset.posterTitle ?? '', number: link.dataset.posterNumber ?? '',
+        color: style.backgroundColor, ink: style.color,
         left: bounds.left, top: bounds.top, width: bounds.width, height: bounds.height, source: link,
+        artwork, layoutWidth: link.offsetWidth, layoutHeight: link.offsetHeight,
       };
     }
 
     async function changePage() {
       const nextPage = getPage();
       const selectedBook = pendingBook?.href === nextPage ? pendingBook : null;
+      const returningBook = nextPage === '#home' && currentPage.current !== '#home' ? lastProject : null;
+      if (selectedBook) lastProject = selectedBook;
       pendingBook = null;
       const request = ++navigation;
       controller?.abort();
       restoreBook();
-      setBook(null);
+      setTransitionPoster(null);
       if (nextPage === currentPage.current) {
         surface!.inert = false;
+        delete surface!.dataset.transitioning;
+        surface!.dispatchEvent(new Event('project-ready', { bubbles: true }));
         return;
       }
 
@@ -63,6 +86,7 @@ function PageTransition({ getPage, children }: Props) {
       const transition = new AbortController();
       controller = transition;
       surface!.inert = true;
+      surface!.dataset.transitioning = 'true';
 
       function commitPage() {
         if (request !== navigation || transition.signal.aborted) return;
@@ -78,11 +102,19 @@ function PageTransition({ getPage, children }: Props) {
       try {
         if (!motion) {
           commitPage();
-        } else if (selectedBook && selectedBook.width > 0 && selectedBook.height > 0) {
-          flushSync(() => setBook(selectedBook));
+        } else if (selectedBook?.source && selectedBook.width > 0 && selectedBook.height > 0) {
+          flushSync(() => setTransitionPoster({ book: selectedBook, direction: 'enter' }));
           hiddenBook = { element: selectedBook.source, visibility: selectedBook.source.style.visibility };
           selectedBook.source.style.visibility = 'hidden';
-          await playPageMotion(surface!, commitPage, transition.signal, { layer: openingRef.current!, book: selectedBook });
+          await playPageMotion(surface!, commitPage, transition.signal, {
+            layer: openingRef.current!, book: selectedBook, direction: 'enter',
+          });
+        } else if (returningBook) {
+          flushSync(() => setTransitionPoster({ book: returningBook, direction: 'exit' }));
+          await playPageMotion(surface!, commitPage, transition.signal, {
+            layer: openingRef.current!, book: returningBook, direction: 'exit',
+            findTarget: () => surface!.querySelector<HTMLElement>(`[data-transition-href="${returningBook.href}"]`),
+          });
         } else {
           await playPageMotion(surface!, commitPage, transition.signal);
         }
@@ -92,8 +124,10 @@ function PageTransition({ getPage, children }: Props) {
         if (request === navigation) {
           restoreBook();
           // 책 연출을 정리한 뒤 화면 조작을 다시 허용합니다.
-          flushSync(() => setBook(null));
+          flushSync(() => setTransitionPoster(null));
           surface!.inert = false;
+          delete surface!.dataset.transitioning;
+          surface!.dispatchEvent(new Event('project-ready', { bubbles: true }));
           surface!.focus({ preventScroll: true });
         }
       }
@@ -106,6 +140,7 @@ function PageTransition({ getPage, children }: Props) {
       controller?.abort();
       restoreBook();
       surface.inert = false;
+      delete surface.dataset.transitioning;
       surface.removeEventListener('click', selectBook);
       window.removeEventListener('hashchange', changePage);
     };
@@ -114,7 +149,7 @@ function PageTransition({ getPage, children }: Props) {
   return (
     <>
       <div ref={surfaceRef} className="page-view" tabIndex={-1}>{children(page)}</div>
-      {book ? <BookOpening book={book} layerRef={openingRef} /> : null}
+      {transitionPoster ? <BookOpening book={transitionPoster.book} direction={transitionPoster.direction} layerRef={openingRef} /> : null}
     </>
   );
 }

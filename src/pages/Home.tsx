@@ -18,7 +18,12 @@ function Home() {
 
       <ProjectList />
 
-      <footer>© 2026 권재원</footer>
+      <footer>
+        <p>© 2026 권재원</p>
+        <p className="image-credit"><a href="https://science.nasa.gov/asset/hubble/the-carina-nebula-star-birth-in-the-extreme/" target="_blank" rel="noreferrer">Nebula Drift — Image credit</a><br />
+          Hubble Image: NASA, ESA, N. Smith (University of California, Berkeley), and The Hubble Heritage Team (STScI/AURA); CTIO Image: N. Smith (University of California, Berkeley) and NOAO/AURA/NSF
+        </p>
+      </footer>
     </main>
   );
 }

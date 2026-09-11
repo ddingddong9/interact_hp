@@ -1,62 +1,92 @@
-import type { SelectedBook } from './BookOpening';
+import type { SelectedBook, TransitionDirection } from './BookOpening';
 
-type Opening = { layer: HTMLElement; book: SelectedBook };
+type PosterMotion = {
+  layer: HTMLElement;
+  book: SelectedBook;
+  direction: TransitionDirection;
+  findTarget?: () => HTMLElement | null;
+};
 
-export async function playPageMotion(surface: HTMLElement, changePage: () => void, signal: AbortSignal, opening?: Opening) {
+export async function playPageMotion(surface: HTMLElement, changePage: () => void, signal: AbortSignal, poster?: PosterMotion) {
   const animations: Animation[] = [];
-  const cancel = () => animations.forEach((animation) => animation.cancel());
-  const play = (element: Element, frames: Keyframe[], duration: number, delay = 0) => {
-    if (signal.aborted) throw new DOMException('전환 취소', 'AbortError');
-    const animation = element.animate(frames, { duration, delay, easing: 'cubic-bezier(.22,.65,.2,1)', fill: 'both' });
+  const originalOpacity = surface.style.opacity;
+  const cancel = () => animations.forEach(animation => animation.cancel());
+  const play = (element: Element, frames: Keyframe[], duration: number, easing = 'cubic-bezier(.4,0,.2,1)') => {
+    if (signal.aborted) throw new DOMException('Transition cancelled', 'AbortError');
+    const animation = element.animate(frames, { duration, easing, fill: 'both' });
     animations.push(animation);
     return animation.finished;
   };
+  const check = () => { if (signal.aborted) throw new DOMException('Transition cancelled', 'AbortError'); };
   signal.addEventListener('abort', cancel, { once: true });
-
   try {
-    if (opening) {
-      const { layer, book } = opening;
-      const stage = layer.querySelector<HTMLElement>('.book-opening__stage')!;
-      const object = layer.querySelector<HTMLElement>('.book-opening__object')!;
-      const cover = layer.querySelector<HTMLElement>('.book-opening__cover')!;
-      const sheet = layer.querySelector<HTMLElement>('.book-opening__sheet')!;
-      const veil = layer.querySelector<HTMLElement>('.book-opening__veil')!;
-      const scale = Math.min(1.65, window.innerHeight * 0.52 / book.height, window.innerWidth * 0.75 / 328);
-      const x = window.innerWidth / 2 - (book.left + book.width / 2);
-      const y = (window.innerHeight - book.height * scale) / 2 - book.top;
-      const pulled = `translate(${x - 82 * scale}px, ${y}px) scale(${scale})`;
-      const opened = `translate(${x}px, ${y}px) scale(${scale})`;
-
-      // 책등이 있던 자리에서 책을 꺼내 정면으로 돌립니다.
+    if (!poster) {
+      await play(surface, [{ opacity: 1 }, { opacity: 0 }], 350);
+      check();
+      changePage();
+      await play(surface, [{ opacity: 0 }, { opacity: 1 }], 450);
+      return;
+    }
+    const { book, layer } = poster;
+    const frame = layer.querySelector<HTMLElement>('.book-opening__frame')!;
+    const veil = layer.querySelector<HTMLElement>('.book-opening__veil')!;
+    // Fixed artwork layout: only uniform transforms change, so type never reflows.
+    const centralScale = Math.min(1.3, (window.innerWidth - 48) / book.layoutWidth, (window.innerHeight - 100) / book.layoutHeight);
+    const centered = `translate(${(window.innerWidth - book.layoutWidth * centralScale) / 2}px, ${(window.innerHeight - book.layoutHeight * centralScale) / 2}px) scale(${centralScale})`;
+    const at = (bounds: { left: number; top: number; width: number }) => `translate(${bounds.left}px, ${bounds.top}px) scale(${bounds.width / book.layoutWidth})`;
+    frame.style.transform = poster.direction === 'enter' ? at(book) : centered;
+    if (poster.direction === 'enter') {
+      veil.style.opacity = '0';
       await Promise.all([
-        play(stage, [{ transform: 'translate(0, 0) scale(1)' }, { transform: pulled }], 880),
-        play(object, [{ transform: 'rotateY(90deg)' }, { transform: 'rotateY(72deg)', offset: 0.28 }, { transform: 'rotateY(0deg)' }], 880),
-        play(veil, [{ opacity: 0 }, { opacity: 0.96 }], 880),
+        play(frame, [{ transform: at(book) }, { transform: centered }], 650),
+        play(veil, [{ opacity: 0 }, { opacity: 1 }], 650),
       ]);
-
-      // 표지를 열고 종이 한 장을 넘긴 다음 화면을 드러냅니다.
-      const depth = book.width / 2;
-      await Promise.all([
-        play(stage, [{ transform: pulled }, { transform: opened }], 980),
-        play(cover, [{ transform: `translateZ(${depth}px) rotateY(0deg)` }, { transform: `translateZ(${depth}px) rotateY(-168deg)` }], 980),
-        play(sheet, [{ transform: `translateZ(${depth - 3}px) rotateY(0deg)` }, { transform: `translateZ(${depth - 3}px) rotateY(-153deg)` }], 860, 170),
-      ]);
-
-      if (signal.aborted) return;
+      await play(frame, [{ transform: centered }, { transform: centered }], 300);
+      check();
+      // Mount the full-size project behind the opaque poster stage.
       changePage();
       await Promise.all([
-        play(surface, [{ opacity: 0 }, { opacity: 1 }], 720),
-        play(layer, [{ opacity: 1 }, { opacity: 0 }], 720),
-        play(stage, [{ transform: opened }, { transform: `translate(${x}px, ${y - 8}px) scale(${scale * 1.06})` }], 720),
+        play(layer, [{ transform: 'translateX(0)' }, { transform: 'translateX(-100%)' }], 950),
+        play(surface, [{ transform: 'translateX(100%)', opacity: 1 }, { transform: 'translateX(0)', opacity: 1 }], 950),
       ]);
-    } else {
-      await play(surface, [{ opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: 'translateY(-7px)' }], 240);
-      if (signal.aborted) return;
-      changePage();
-      await play(surface, [{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'translateY(0)' }], 440);
+      return;
+    }
+    // Live project slides away intact; the central poster stage enters from the left.
+    layer.style.transform = 'translateX(-100%)';
+    await Promise.all([
+      play(layer, [{ transform: 'translateX(-100%)' }, { transform: 'translateX(0)' }], 950),
+      play(surface, [{ transform: 'translateX(0)' }, { transform: 'translateX(100%)' }], 950),
+    ]);
+    check();
+    // Remove the outgoing transform before measuring the restored home layout.
+    surface.style.opacity = '0';
+    animations.filter(animation => (animation.effect as KeyframeEffect | null)?.target === surface).forEach(animation => animation.cancel());
+    changePage();
+    await play(frame, [{ transform: centered }, { transform: centered }], 300);
+    check();
+    const target = poster.findTarget?.();
+    const bounds = target?.getBoundingClientRect();
+    if (!target || !bounds || bounds.width <= 0 || bounds.height <= 0) {
+      surface.style.opacity = originalOpacity;
+      await play(layer, [{ opacity: 1 }, { opacity: 0 }], 400);
+      return;
+    }
+    const visibility = target.style.visibility;
+    target.style.visibility = 'hidden';
+    surface.style.opacity = originalOpacity;
+    try {
+      await Promise.all([
+        play(frame, [{ transform: centered }, { transform: at(bounds) }], 700),
+        play(veil, [{ opacity: 1 }, { opacity: 0 }], 700),
+      ]);
+      target.style.visibility = visibility;
+      await play(frame, [{ opacity: 1 }, { opacity: 0 }], 120);
+    } finally {
+      target.style.visibility = visibility;
     }
   } finally {
     signal.removeEventListener('abort', cancel);
     cancel();
+    surface.style.opacity = originalOpacity;
   }
 }

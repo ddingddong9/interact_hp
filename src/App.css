@@ -114,3 +114,6 @@ a { color: inherit; }
   .theme-toggle,
   .home { transition: none; }
 }
+
+.home .image-credit { margin-top: 24px; font: 12px/1.7 Arial, sans-serif; color: var(--site-muted); }
+.home .image-credit a { text-underline-offset: 3px; }

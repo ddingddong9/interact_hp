@@ -1,21 +1,21 @@
-/* 선택한 책만 책장 밖에서 움직여 다른 책의 위치는 그대로 유지합니다. */
-.book-opening { position: fixed; inset: 0; z-index: 200; color: var(--book-ink); pointer-events: none; }
-.book-opening__veil { position: absolute; inset: 0; background: var(--site-bg); opacity: 0; }
-.book-opening__stage { position: absolute; perspective: 1600px; perspective-origin: 0 50%; transform-origin: 0 0; }
-.book-opening__object { position: absolute; inset: 0; transform-style: preserve-3d; transform-origin: 0 50%; transform: rotateY(90deg); }
-.book-opening__spine {
-  position: absolute; top: 0; bottom: 0; left: calc(var(--book-depth) / -2); width: var(--book-depth);
-  display: flex; flex-direction: column; align-items: center; padding: 17px 0;
-  background: linear-gradient(90deg, #0000001a, transparent 28%, #ffffff0b 52%, #00000020), var(--book-color);
-  transform: rotateY(-90deg); backface-visibility: hidden; border-radius: 3px;
+.book-opening {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  overflow: hidden;
+  pointer-events: none;
+  will-change: transform;
 }
-.book-opening__back { position: absolute; inset: 0; background: var(--book-color); border-radius: 2px 5px 5px 2px; transform: translateZ(calc(var(--book-depth) / -2)); }
-.book-opening__pages { position: absolute; inset: 4px 2px 4px 1px; background: linear-gradient(90deg, #c5c0b6, #e5e1d7 12%, #eeebe3 90%, #d6d0c5); border-radius: 0 3px 3px 0; box-shadow: 3px 5px 14px #00000015; transform: translateZ(calc(var(--book-depth) / 2 - 5px)); }
-.book-opening__sheet { position: absolute; inset: 5px 3px 5px 2px; background: linear-gradient(90deg, #d1cbbf, #ede9e0 15%, #e4dfd5); transform-origin: 0 50%; transform: translateZ(calc(var(--book-depth) / 2 - 3px)); border-radius: 0 2px 2px 0; box-shadow: 2px 0 5px #0000000a; }
-.book-opening__cover { position: absolute; inset: 0; transform-style: preserve-3d; transform-origin: 0 50%; transform: translateZ(calc(var(--book-depth) / 2)); }
-.book-opening__outside, .book-opening__inside { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 2px 5px 5px 2px; }
-.book-opening__outside { display: flex; flex-direction: column; padding: 20px 22px; background: linear-gradient(90deg, #00000015, transparent 7%, #ffffff06), var(--book-color); box-shadow: inset 1px 0 #ffffff18, 2px 3px 9px #00000018; }
-.book-opening__outside > span { font: 12px monospace; opacity: .75; }
-.book-opening__outside strong { max-width: 100px; margin-top: 28px; font-size: 25px; line-height: 1.55; font-weight: 500; letter-spacing: -.045em; word-break: keep-all; }
-.book-opening__outside i { margin-top: auto; width: 22px; border-top: 1px solid currentColor; opacity: .4; }
-.book-opening__inside { background: linear-gradient(90deg, #e1dcd1, #e9e4da 75%, #bdb7ab); transform: rotateY(180deg); box-shadow: inset 0 0 0 4px var(--book-color); }
+.book-opening__veil { position: absolute; inset: 0; background: var(--site-bg); }
+.book-opening__frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+.book-opening__frame > .project-poster { pointer-events: none; }
+.page-view[data-transitioning] { pointer-events: none; }
+@media (prefers-reduced-motion: reduce) {
+  .book-opening { display: none; }
+}

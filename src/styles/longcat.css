@@ -1,0 +1,24 @@
+.longcat-stage {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  isolation: isolate;
+  background: #d9583f;
+  color: #fff3d8;
+}
+.longcat-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+  outline: none;
+  opacity: 0;
+  transition: opacity 450ms ease;
+}
+.longcat-canvas.is-ready { opacity: 1; }
+.longcat-stage .experiment-controls { --experiment-ink: #fff3d8; --experiment-shadow: none; }
+@media (prefers-reduced-motion: reduce) { .longcat-canvas { transition: none; } }

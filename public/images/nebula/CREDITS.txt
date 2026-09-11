@@ -1,0 +1,18 @@
+Nebula Drift uses the Carina Nebula panorama (2007).
+
+Primary source:
+https://science.nasa.gov/asset/hubble/the-carina-nebula-star-birth-in-the-extreme/
+
+Hubble Image: NASA, ESA, N. Smith (University of California, Berkeley), and The Hubble Heritage Team (STScI/AURA); CTIO Image: N. Smith (University of California, Berkeley) and NOAO/AURA/NSF
+
+Downloaded high-resolution copy:
+https://cdn.esahubble.org/archives/images/large/heic0707a.jpg
+https://esahubble.org/images/heic0707a/
+
+Usage guidance:
+https://www.nasa.gov/nasa-brand-center/images-and-media/
+https://esahubble.org/copyright/
+https://creativecommons.org/licenses/by/4.0/
+
+Proportional JPEG resizing only. Interactive perspective projection and a subtle edge vignette are applied at display time.
+Full image credit is displayed in the site's home-page footer. The experience's information icon links to the primary NASA source and credits.

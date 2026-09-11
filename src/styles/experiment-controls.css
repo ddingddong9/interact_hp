@@ -1,0 +1,81 @@
+/* Quiet FFF-style controls: an outlined exit and small text utilities. */
+.experiment-controls {
+  position: absolute;
+  z-index: 40;
+  inset: 0;
+  pointer-events: none;
+  --control-edge: 28px;
+  --experiment-ink: #fff;
+  --experiment-shadow: 0 1px 4px #0009;
+}
+.mouse-playground .experiment-controls { --experiment-ink: var(--play-ink); --experiment-shadow: none; }
+.submit-feedback .experiment-controls { --experiment-ink: var(--submit-ink); --experiment-shadow: none; }
+.experiment-close {
+  position: absolute;
+  top: calc(50% - 22px);
+  right: max(var(--control-edge), env(safe-area-inset-right));
+  display: grid;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  place-items: center;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--experiment-ink);
+  pointer-events: auto;
+  cursor: pointer;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 160ms ease;
+}
+.experiment-close svg { display: block; pointer-events: none; filter: drop-shadow(var(--experiment-shadow)); }
+.experiment-close:active { transform: scale(.94); }
+.experiment-close:focus-visible { outline: 2px solid currentColor; outline-offset: 5px; }
+.experiment-utilities {
+  position: absolute;
+  left: 50%;
+  bottom: max(19px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--experiment-ink);
+  white-space: nowrap;
+  font: 400 12px/1.4 Arial, sans-serif;
+  text-shadow: var(--experiment-shadow);
+}
+.experiment-text-control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 6px 4px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-shadow: inherit;
+  text-decoration: none;
+  pointer-events: auto;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.experiment-text-control:focus-visible { outline: 1px solid currentColor; outline-offset: 3px; }
+.experiment-utility-separator { opacity: .65; }
+@media (hover: hover) {
+  .experiment-close:hover { transform: scale(1.06); }
+  .experiment-text-control:hover { text-decoration: underline; text-underline-offset: 3px; }
+}
+@media (max-width: 640px) {
+  .experiment-controls { --control-edge: 16px; }
+  .experiment-utilities { bottom: max(12px, env(safe-area-inset-bottom)); }
+  .experiment-text-control { min-height: 44px; }
+}
+@media (max-height: 420px) {
+  .experiment-controls { --control-edge: 16px; }
+  .experiment-utilities { bottom: max(8px, env(safe-area-inset-bottom)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .experiment-close { transition: none; }
+}

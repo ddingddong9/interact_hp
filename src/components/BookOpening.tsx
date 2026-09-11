@@ -1,4 +1,4 @@
-import type { CSSProperties, Ref } from 'react';
+import { useLayoutEffect, useRef, type CSSProperties, type Ref } from 'react';
 import '../styles/book-opening.css';
 
 export type SelectedBook = {
@@ -11,36 +11,38 @@ export type SelectedBook = {
   top: number;
   width: number;
   height: number;
-  source: HTMLElement;
+  source: HTMLElement | null;
+  artwork: HTMLElement;
+  layoutWidth: number;
+  layoutHeight: number;
 };
 
-type Props = { book: SelectedBook; layerRef: Ref<HTMLDivElement> };
+export type TransitionDirection = 'enter' | 'exit';
 
-function BookOpening({ book, layerRef }: Props) {
+type Props = {
+  book: SelectedBook;
+  direction: TransitionDirection;
+  layerRef: Ref<HTMLDivElement>;
+};
+
+function BookOpening({ book, direction, layerRef }: Props) {
+  const frame = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    frame.current?.replaceChildren(book.artwork.cloneNode(true));
+  }, [book]);
   return (
-    <div className="book-opening" ref={layerRef} aria-hidden="true"
-      style={{ '--book-color': book.color, '--book-ink': book.ink, '--book-depth': `${book.width}px` } as CSSProperties}>
+    <div
+      className={`book-opening is-${direction}`}
+      ref={layerRef}
+      aria-hidden="true"
+      style={{ '--book-color': book.color, '--book-ink': book.ink } as CSSProperties}
+    >
       <div className="book-opening__veil" />
-      <div className="book-opening__stage" style={{ left: book.left + book.width / 2, top: book.top, width: 164, height: book.height }}>
-        <div className="book-opening__object">
-          <div className="book-opening__spine">
-            <span className="project-book__number">{book.number}</span>
-            <span className="project-book__title">{book.title}</span>
-            <span className="project-book__rule" />
-          </div>
-          <div className="book-opening__back" />
-          <div className="book-opening__pages" />
-          <div className="book-opening__sheet" />
-          <div className="book-opening__cover">
-            <div className="book-opening__outside">
-              <span>{book.number}</span>
-              <strong>{book.title}</strong>
-              <i />
-            </div>
-            <div className="book-opening__inside" />
-          </div>
-        </div>
-      </div>
+      <div
+        className="book-opening__frame"
+        ref={frame}
+        style={{ width: book.layoutWidth, height: book.layoutHeight }}
+      />
     </div>
   );
 }
