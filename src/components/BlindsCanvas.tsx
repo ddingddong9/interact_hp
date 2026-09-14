@@ -26,6 +26,7 @@ export default function BlindsCanvas() {
     let loaded = false, disposed = false, frame = 0, last = 0;
     let openings: Opening[] = [];
     const hover = { x: .5, y: .45, strength: 0, target: 0 };
+    const ripple = { x: .5, y: .45, energy: 0 };
     let press: { x: number; y: number; id: number; opening: Opening } | null = null;
     let keyOpening: Opening | null = null;
     let keyboard = false;
@@ -69,6 +70,14 @@ export default function BlindsCanvas() {
 
     function displacement(y: number, x: number) {
       let shift = 0;
+      // A continuous, shallow bend keeps the lines closed during pointer movement.
+      if (!reduced && !press && !keyboard && ripple.energy > .01) {
+        const dx = (x - ripple.x * width) / Math.min(140, width * .25);
+        const dy = (y - ripple.y * height) / 65;
+        if (Math.abs(dx) < 1 && Math.abs(dy) < 1) {
+          shift += ripple.energy * (1 - dx * dx) ** 3 * (1 - dy * dy) ** 3;
+        }
+      }
       for (const opening of openings) {
         const radius = Math.min(width * .55, height * .44) + opening.amount * .25;
         const distance = (x - opening.x * width) / radius;
@@ -144,6 +153,11 @@ export default function BlindsCanvas() {
       openings = openings.filter(o => o === press?.opening || o === keyOpening || o.target || o.amount > .0001);
       hover.strength += (hover.target - hover.strength) * (1 - Math.exp(-dt * 12));
       if (Math.abs(hover.target - hover.strength) > .001) moving = true;
+      ripple.x += (hover.x - ripple.x) * (1 - Math.exp(-dt * 18));
+      ripple.y += (hover.y - ripple.y) * (1 - Math.exp(-dt * 18));
+      ripple.energy = reduced || press || keyboard ? 0 : ripple.energy * Math.exp(-dt * 4.5);
+      if (ripple.energy > .01) moving = true;
+      else ripple.energy = 0;
       draw();
       if (moving && !document.hidden) frame = requestAnimationFrame(tick);
     }
@@ -170,7 +184,13 @@ export default function BlindsCanvas() {
     }
     function move(e: PointerEvent) {
       if (press && press.id !== e.pointerId) return;
-      const p = location(e); hover.x = p.x; hover.y = p.y;
+      const p = location(e);
+      if (!hover.target) { ripple.x = p.x; ripple.y = p.y; }
+      else if (!press && !reduced && e.pointerType !== 'touch') {
+        const distance = Math.hypot((p.x - hover.x) * width, (p.y - hover.y) * height);
+        ripple.energy = Math.min(5, ripple.energy + Math.min(distance, 35) * .12);
+      }
+      hover.x = p.x; hover.y = p.y;
       hover.target = e.pointerType === 'touch' ? 0 : 1; keyboard = false;
       if (press) {
         const travel = (p.y - press.y) * height;
