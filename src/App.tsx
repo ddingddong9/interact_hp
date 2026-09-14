@@ -5,12 +5,13 @@ import Home from './pages/Home';
 import AssignmentBreaker from './pages/AssignmentBreaker';
 import AssignmentSubmit from './pages/AssignmentSubmit';
 import MousePlayground from './pages/MousePlayground';
+import FoldPage from './pages/FoldPage';
 
 const titles: Record<string, string> = {
   '#home': '권재원 Kwon Jaewon',
   '#assignment-breaker': 'Nebula Drift · Kwon Jaewon',
   '#assignment-submit': 'Blinds · Kwon Jaewon',
-  '#orbit-playground': 'Soft Orbit · Kwon Jaewon',
+  '#orbit-playground': 'FOLD · Kwon Jaewon',
   '#type-playground': 'Type Drift · Kwon Jaewon',
 };
 
@@ -26,7 +27,7 @@ function Page({ page }: { page: string }) {
   let content = <Home />;
   if (page === '#assignment-breaker') content = <AssignmentBreaker />;
   if (page === '#assignment-submit') content = <AssignmentSubmit />;
-  if (page === '#orbit-playground') content = <MousePlayground key="orbit" mode="orbit" />;
+  if (page === '#orbit-playground') content = <FoldPage />;
   if (page === '#type-playground') content = <MousePlayground key="type" mode="type" />;
 
   return <><ThemeToggle visible={page === '#home'} />{content}</>;

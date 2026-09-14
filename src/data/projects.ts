@@ -13,9 +13,9 @@ export const projects = [
   },
   {
     href: '#orbit-playground',
-    title: 'Soft Orbit',
-    eyebrow: 'POINTER / CANVAS',
-    description: 'FOLLOW THE ORBIT',
+    title: 'FOLD',
+    eyebrow: 'PLANE / PAPER',
+    description: 'ORCHID STUDY',
   },
   {
     href: '#type-playground',

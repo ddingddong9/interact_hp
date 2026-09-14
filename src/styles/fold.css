@@ -1,0 +1,134 @@
+.fold-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  isolation: isolate;
+  background: #dfd9cb;
+  color: #241d1a;
+}
+.fold-stage::before {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 47%, #f6f1e7 0, #e8e1d4 43%, #c9c0ae 100%);
+  content: '';
+  pointer-events: none;
+}
+.fold-stage .experiment-controls { --experiment-ink: #2b211d; --experiment-shadow: none; }
+.fold-artwork {
+  --fold-split: 53%;
+  --fold-split-px: 53%;
+  --fold-height: 100%;
+  --fold-angle: 0deg;
+  --fold-depth: 0;
+  --fold-tilt-x: 0deg;
+  --fold-tilt-y: 0deg;
+  position: relative;
+  z-index: 1;
+  width: min(76vw, 61vh, 720px);
+  width: min(76vw, 61dvh, 720px);
+  aspect-ratio: 3 / 4;
+  flex: none;
+  outline: none;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  perspective: 1550px;
+  perspective-origin: 50% 55%;
+  transform: rotateX(var(--fold-tilt-x)) rotateY(var(--fold-tilt-y));
+  transform-style: preserve-3d;
+  opacity: 0;
+  transition: opacity 650ms ease;
+}
+.fold-artwork[data-loaded="true"] { opacity: 1; }
+.fold-artwork.is-pulling { cursor: grabbing; }
+.fold-artwork:focus-visible:not([data-pointer-focus]) { outline: 2px solid #2b211d; outline-offset: 9px; }
+.fold-artwork__substrate {
+  position: absolute;
+  inset: 0;
+  background: url('/images/fold/orchid-front.jpg') center / cover;
+  box-shadow: inset 0 0 0 1px #43231821, 0 32px 33px #2d170d45, 0 6px 10px #2418162b;
+}
+.fold-artwork__substrate::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(165deg, #fff9ef0c, transparent 35%, #16040818 100%);
+  content: '';
+}
+.fold-artwork__lower {
+  position: absolute;
+  inset: var(--fold-split) 0 0;
+  overflow: hidden;
+  backface-visibility: hidden;
+}
+.fold-artwork__lower > img,
+.fold-artwork__face img {
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--fold-height);
+  object-fit: fill;
+  pointer-events: none;
+}
+.fold-artwork__lower > img { top: calc(-1 * var(--fold-split-px)); }
+.fold-artwork__cast-shadow {
+  position: absolute;
+  inset: 0;
+  opacity: var(--fold-depth);
+  background: linear-gradient(to bottom, #1e070a9c 0, #240b105c 10%, #210c0f12 34%, transparent 67%);
+  pointer-events: none;
+}
+.fold-artwork__flap {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--fold-split);
+  transform-origin: 50% 100%;
+  transform: rotateX(var(--fold-angle));
+  transform-style: preserve-3d;
+}
+.fold-artwork__face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.fold-artwork__face--front {
+  background: #aa1c11;
+  box-shadow: inset 0 -1px #fff1d854;
+}
+.fold-artwork__face--reverse {
+  background: #280a08;
+  transform: rotateX(180deg) translateZ(1px);
+}
+.fold-artwork__rim {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(to bottom, #fff1de, #8d6d54);
+  opacity: var(--fold-depth);
+  transform: rotateX(90deg);
+  transform-origin: center top;
+  pointer-events: none;
+}
+@media (max-width: 640px) {
+  .fold-artwork {
+    width: min(78vw, 58dvh);
+    transform: translateX(-26px) rotateX(var(--fold-tilt-x)) rotateY(var(--fold-tilt-y));
+  }
+  .fold-stage .experiment-close { color: #2b211d; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fold-artwork { transition: none; }
+}
