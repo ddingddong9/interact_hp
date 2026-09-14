@@ -1,0 +1,28 @@
+.blinds-stage {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  isolation: isolate;
+  background: #080a0a;
+  color: #f0e6cf;
+}
+.blinds-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+  cursor: grab;
+  outline: none;
+  opacity: 0;
+  transition: opacity 650ms ease;
+}
+.blinds-canvas.is-pulling { cursor: grabbing; }
+.blinds-canvas.is-ready { opacity: 1; }
+.blinds-canvas:focus-visible:not([data-pointer-focus]) { outline: 1px solid #f0e6cf; outline-offset: -8px; }
+.blinds-stage .experiment-controls { --experiment-ink: #f0e6cf; --experiment-shadow: 0 1px 5px #000; }
+.blinds-fallback { width: 100%; height: 100%; object-fit: contain; }
+@media (prefers-reduced-motion: reduce) { .blinds-canvas { transition: none; } }

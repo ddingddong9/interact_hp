@@ -23,6 +23,7 @@ function Home() {
         <p className="image-credit"><a href="https://science.nasa.gov/asset/hubble/the-carina-nebula-star-birth-in-the-extreme/" target="_blank" rel="noreferrer">Nebula Drift — Image credit</a><br />
           Hubble Image: NASA, ESA, N. Smith (University of California, Berkeley), and The Hubble Heritage Team (STScI/AURA); CTIO Image: N. Smith (University of California, Berkeley) and NOAO/AURA/NSF
         </p>
+        <p className="image-credit"><a href="https://www.mauritshuis.nl/en/our-collection/artworks/670-girl-with-a-pearl-earring" target="_blank" rel="noreferrer">Blinds — Johannes Vermeer, Girl with a Pearl Earring</a><br />Mauritshuis, The Hague.</p>
       </footer>
     </main>
   );

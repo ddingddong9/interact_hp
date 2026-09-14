@@ -9,7 +9,7 @@ import MousePlayground from './pages/MousePlayground';
 const titles: Record<string, string> = {
   '#home': '권재원 Kwon Jaewon',
   '#assignment-breaker': 'Nebula Drift · Kwon Jaewon',
-  '#assignment-submit': 'Longcat · Kwon Jaewon',
+  '#assignment-submit': 'Blinds · Kwon Jaewon',
   '#orbit-playground': 'Soft Orbit · Kwon Jaewon',
   '#type-playground': 'Type Drift · Kwon Jaewon',
 };

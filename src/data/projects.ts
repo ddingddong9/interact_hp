@@ -7,9 +7,9 @@ export const projects = [
   },
   {
     href: '#assignment-submit',
-    title: 'Longcat',
-    eyebrow: 'LINE / CHARACTER',
-    description: 'A LITTLE STRETCH',
+    title: 'Blinds',
+    eyebrow: 'LINE / REVEAL',
+    description: 'BEHIND THE LINES',
   },
   {
     href: '#orbit-playground',
