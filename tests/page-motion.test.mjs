@@ -55,3 +55,21 @@ test('interrupted entry cleans animations without starting the slide', async () 
   assert.ok(s.frame.animations.every(animation => animation.cancelled));
   assert.equal(s.surface.style.opacity, '');
 });
+
+test('chapter leaf peeks diagonally before unfolding into the selected page', async () => {
+  const s = setup('enter');
+  s.poster.book.isLeaf = true;
+  await playPageMotion(s.surface, s.commit, new AbortController().signal, s.poster);
+  const commit = s.log.findIndex(item => item.name === 'commit');
+  assert.ok(s.log.slice(0, commit).some(item => item.name === 'frame' && item.frames.some(frame => frame.transform?.includes('rotate(-9deg)') && frame.clipPath === 'inset(0 0 64% 0)')));
+  assert.ok(s.log.slice(commit + 1).some(item => item.name === 'frame' && item.frames.at(-1).transform?.includes('rotateY(-82deg)')));
+  assert.ok(s.frame.animations.every(animation => animation.cancelled));
+});
+
+test('interrupted chapter unfolding cleans every animation', async () => {
+  const s = setup('enter'), controller = new AbortController();
+  s.poster.book.isLeaf = true;
+  await assert.rejects(playPageMotion(s.surface, () => controller.abort(), controller.signal, s.poster), { name: 'AbortError' });
+  assert.ok(s.frame.animations.every(animation => animation.cancelled));
+  assert.equal(s.surface.style.opacity, '');
+});

@@ -19,3 +19,6 @@
 @media (prefers-reduced-motion: reduce) {
   .book-opening { display: none; }
 }
+.book-opening.is-leaf { perspective:1400px; }
+.book-opening.is-leaf .book-opening__frame { transform-origin:0 0; }
+.book-opening.is-leaf .series-leaf { pointer-events:none; }

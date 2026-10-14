@@ -296,9 +296,6 @@ function ProjectList() {
 
   return (
     <section className="project-section" aria-labelledby="project-heading">
-      <div className="project-track__heading">
-        <p className="section-kicker">SELECTED WORKS — 2026</p>
-      </div>
       <h2 className="project-track__sr-only" id="project-heading">프로젝트</h2>
 
       <div
@@ -306,7 +303,7 @@ function ProjectList() {
         ref={viewportRef}
         role="region"
         aria-roledescription="carousel"
-        aria-label="프로젝트 포스터 트랙"
+        aria-label="시리즈 책 트랙"
         tabIndex={0}
         data-poster-track
         onPointerDown={handlePointerDown}
@@ -332,15 +329,15 @@ function ProjectList() {
       </div>
 
       <div className="project-track__controls">
-        <button type="button" onClick={() => snapTo(activeIndexRef.current - 1)} disabled={activeIndex === 0} aria-label="이전 프로젝트">
+        <button type="button" onClick={() => snapTo(activeIndexRef.current - 1)} disabled={activeIndex === 0} aria-label="이전 시리즈">
           ←
         </button>
         <p aria-live="polite">
           <span>{String(activeIndex + 1).padStart(2, '0')}</span>
           <span className="project-track__divider">/</span>
-          <strong>{projects[activeIndex].title}</strong>
+          <strong>{projects[activeIndex]?.title ?? projects[0].title}</strong>
         </p>
-        <button type="button" onClick={() => snapTo(activeIndexRef.current + 1)} disabled={activeIndex === projects.length - 1} aria-label="다음 프로젝트">
+        <button type="button" onClick={() => snapTo(activeIndexRef.current + 1)} disabled={activeIndex === projects.length - 1} aria-label="다음 시리즈">
           →
         </button>
       </div>

@@ -2,6 +2,7 @@ import { useLayoutEffect, useRef, type CSSProperties, type Ref } from 'react';
 import '../styles/book-opening.css';
 
 export type SelectedBook = {
+  isLeaf?: boolean;
   href: string;
   title: string;
   number: string;
@@ -32,7 +33,7 @@ function BookOpening({ book, direction, layerRef }: Props) {
   }, [book]);
   return (
     <div
-      className={`book-opening is-${direction}`}
+      className={`book-opening is-${direction} ${book.isLeaf ? 'is-leaf' : ''}`}
       ref={layerRef}
       aria-hidden="true"
       style={{ '--book-color': book.color, '--book-ink': book.ink } as CSSProperties}

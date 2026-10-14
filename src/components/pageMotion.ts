@@ -35,6 +35,27 @@ export async function playPageMotion(surface: HTMLElement, changePage: () => voi
     const centered = `translate(${(window.innerWidth - book.layoutWidth * centralScale) / 2}px, ${(window.innerHeight - book.layoutHeight * centralScale) / 2}px) scale(${centralScale})`;
     const at = (bounds: { left: number; top: number; width: number }) => `translate(${bounds.left}px, ${bounds.top}px) scale(${bounds.width / book.layoutWidth})`;
     frame.style.transform = poster.direction === 'enter' ? at(book) : centered;
+    if (poster.direction === 'enter' && book.isLeaf) {
+      veil.style.opacity = '0';
+      const peek = `${at(book)} translate(12px, -92px) rotate(-9deg)`;
+      await play(frame, [
+        { transform: at(book), clipPath: 'inset(0 0 100% 0)', opacity: 0 },
+        { transform: peek, clipPath: 'inset(0 0 64% 0)', opacity: 1 },
+      ], 500);
+      await play(frame, [{ transform: peek, clipPath: 'inset(0 0 64% 0)' }, { transform: peek, clipPath: 'inset(0 0 64% 0)' }], 180);
+      await Promise.all([
+        play(frame, [{ transform: peek, clipPath: 'inset(0 0 64% 0)' }, { transform: centered, clipPath: 'inset(0 0 0% 0)' }], 650),
+        play(veil, [{ opacity: 0 }, { opacity: 1 }], 650),
+      ]);
+      check();
+      changePage();
+      await Promise.all([
+        play(frame, [{ transform: centered, opacity: 1 }, { transform: `${centered} rotateY(-82deg)`, opacity: 0 }], 600),
+        play(veil, [{ opacity: 1 }, { opacity: 0 }], 600),
+        play(surface, [{ opacity: 0, transform: 'scale(.98)' }, { opacity: 1, transform: 'scale(1)' }], 600),
+      ]);
+      return;
+    }
     if (poster.direction === 'enter') {
       veil.style.opacity = '0';
       await Promise.all([

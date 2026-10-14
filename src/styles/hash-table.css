@@ -1,0 +1,161 @@
+.hash-page{height:100dvh;overflow-y:auto;background:var(--site-bg);color:var(--site-text);padding:28px max(24px,calc((100vw - 1100px)/2)) 70px;font-family:Arial,system-ui,sans-serif}.hash-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:30px}.hash-header h1{font:400 clamp(28px,4vw,40px)/1.2 Georgia,serif;margin:0;letter-spacing:-.04em}.hash-header a{display:grid;place-items:center;width:44px;height:44px;border:1px solid var(--site-border);border-radius:50%;text-decoration:none;font-size:28px}.hash-visual{border:1px solid var(--site-border);padding:24px;background:color-mix(in srgb,var(--site-bg) 94%,var(--site-text))}.hash-diagram-scroll{overflow-x:auto}.hash-diagram{display:block;width:100%;min-width:760px;height:auto;min-height:330px;color:var(--site-muted);overflow:visible}.hash-diagram text{fill:var(--site-text);font:18px Arial,sans-serif}.hash-diagram .diagram-label,.hash-diagram .empty-label{fill:var(--site-faint);font-size:20px;font-weight:500}.hash-route,.chain-link{fill:none;stroke:var(--site-border);stroke-width:1.5}.hash-route-active{stroke:#c9773e;stroke-dasharray:5 5;animation:hash-flow 1s linear infinite}.hash-bucket,.hash-function{fill:var(--site-bg);stroke:var(--site-border);stroke-width:1.5;transition:fill .4s,stroke .4s}.hash-node{fill:var(--site-bg);stroke:var(--site-border);stroke-width:1.5;transition:fill .4s,stroke .4s}.hash-diagram .is-highlighted{fill:color-mix(in srgb,#e8b584 40%,var(--site-bg));stroke:#c9773e}.hash-diagram .entry-key{font-weight:bold;font-size:18px}.hash-diagram .entry-value{font-size:14px;fill:var(--site-muted)}.hash-entry{transition:transform .65s cubic-bezier(.25,.8,.25,1);animation:hash-appear .5s ease}.hash-token{transition:transform .75s cubic-bezier(.25,.8,.25,1);pointer-events:none}.hash-token rect{fill:#cc793b;stroke:var(--site-bg);stroke-width:2}.hash-token text{fill:#fff;font-weight:bold}.hash-token.is-comparing rect{fill:transparent;stroke:#cc793b;stroke-width:3}.hash-token.is-comparing text{opacity:0}.hash-status{border-top:1px solid var(--site-border);padding:18px 0;min-height:64px;font-size:16px;line-height:1.65;word-break:keep-all}.hash-inputs{display:flex;align-items:end;gap:10px;flex-wrap:wrap}.hash-inputs label{font-size:15px;font-weight:500;display:flex;flex-direction:column;gap:6px}.hash-inputs input{width:115px;padding:10px;border:1px solid var(--site-border);color:var(--site-text);background:var(--site-bg);font:17px Arial;min-height:44px;border-radius:3px}.hash-page button,.hash-page select{border:1px solid var(--site-border);background:transparent;color:var(--site-text);border-radius:3px;padding:10px 16px;font:15px Arial;min-height:44px;cursor:pointer}.hash-inputs button[type=submit]{background:var(--site-text);color:var(--site-bg);border-color:var(--site-text)}.hash-page button:disabled{opacity:.35;cursor:default}.hash-page button:hover:not(:disabled){border-color:#c9773e}.hash-page :is(button,a,input,select):focus-visible{outline:2px solid #c9773e;outline-offset:4px}.hash-playback{display:flex;justify-content:space-between;gap:16px;border-top:1px solid var(--site-border);margin-top:22px;padding-top:16px}.hash-playback>div{display:flex;align-items:center;gap:8px}.hash-step{font:13px monospace;color:var(--site-muted);margin-left:7px}.hash-speed{font-size:14px;display:flex;gap:8px;align-items:center}.hash-speed select{padding:9px}.hash-explanation{max-width:760px;margin:55px auto 0}.hash-explanation article{padding:24px 0;border-bottom:1px solid var(--site-border)}.hash-explanation h2{font-size:19px;margin:0 0 12px;font-weight:600}.hash-explanation p{font-size:15px;line-height:1.9;margin:0;word-break:keep-all;color:var(--site-muted)}.hash-explanation button{margin-top:14px;padding:8px 12px}.hash-explanation .hash-source{font-size:12px;margin-top:26px;line-height:1.8}.hash-source a{display:block;text-underline-offset:3px}@keyframes hash-flow{to{stroke-dashoffset:-20}}@keyframes hash-appear{from{opacity:0}to{opacity:1}}@media(max-width:600px){.hash-page{padding:20px 16px 50px}.hash-visual{padding:15px}.hash-inputs{gap:8px}.hash-inputs label{flex:1}.hash-inputs input{width:100%;min-width:80px}.hash-inputs button{padding:10px 12px}.hash-playback{flex-wrap:wrap}.hash-explanation{margin-top:25px}.hash-header{margin-bottom:20px}}@media(prefers-reduced-motion:reduce){.hash-entry,.hash-token,.hash-node,.hash-bucket,.hash-function{animation:none;transition:none}.hash-route-active{animation:none}}
+.hash-entry.is-removing { opacity: 0; transition: opacity .65s ease, transform .65s ease; }
+@media(prefers-reduced-motion:reduce){.hash-entry.is-removing{transition:none}}
+.hash-diagram .bucket-number { font-size: 22px; font-weight: 600; }
+
+.hash-pointer { fill: #c9773e; transition: transform .65s ease; pointer-events: none; }
+.hash-pending { animation: hash-appear .5s ease; }
+@media(prefers-reduced-motion:reduce){.hash-pointer{transition:none}.hash-pending{animation:none}}
+
+/* Shared typography and spacing for the four learning screens. */
+.hash-page {
+  --lab-body-font: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
+  --lab-number-font: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --lab-space: 16px;
+  font-family: var(--lab-body-font);
+}
+.hash-header { margin-bottom: 32px; }
+.hash-header h1 { font: 700 32px/1.25 var(--lab-body-font); letter-spacing: -.025em; }
+.hash-visual { padding: 24px; }
+.hash-page .lab-stage { height: 440px; overflow: auto; overscroll-behavior: auto; scrollbar-gutter: stable; }
+.hash-page .hash-status { height: 112px; min-height: 112px; padding: 24px 0; overflow: auto; font-size: 16px; line-height: 1.7; }
+.hash-inputs { gap: 16px; }
+.hash-inputs label { gap: 8px; font-size: 16px; font-weight: 400; }
+.hash-page .hash-inputs input { height: 44px; min-height: 44px; padding: 0 12px; font: 16px var(--lab-body-font); }
+.hash-page .hash-inputs input[type=number] { font-family: var(--lab-number-font); }
+.hash-page button, .hash-page select { height: 44px; padding: 0 16px; font: 16px var(--lab-body-font); }
+.hash-page .hash-inputs input[type=checkbox] { height: 18px; min-height: 18px; padding: 0; }
+.hash-page .hash-playback { margin-top: 24px; padding-top: 24px; gap: 16px; }
+.hash-playback > div { gap: 8px; }
+.hash-playback > div:first-child > button:first-child,
+.hash-playback > div:first-child > button:nth-child(3) { width: 44px; padding: 0; }
+.hash-playback > div:first-child > button:nth-child(2) { width: 112px; padding: 0 8px; }
+.hash-page .hash-step { min-width: 64px; font: 14px var(--lab-number-font); }
+.hash-speed { font-size: 16px; }
+.hash-speed select { font-family: var(--lab-number-font); }
+.hash-page .hash-explanation { max-width: 720px; margin: 48px auto 0; }
+.hash-explanation article { padding: 32px 0; }
+.hash-explanation h2 { font-size: 20px; line-height: 1.4; font-weight: 700; margin-bottom: 16px; }
+.hash-explanation p { font-size: 18px; line-height: 1.7; }
+.hash-explanation button { margin-top: 16px; padding: 0 12px; }
+.hash-page .hash-diagram text, .hash-page .structure-diagram text { font-family: var(--lab-body-font); }
+.hash-page .hash-diagram .bucket-number, .hash-page .hash-diagram .node-number,
+.hash-page .hash-token text, .hash-page .structure-diagram .node-number,
+.hash-page .structure-diagram .span-label, .hash-page .incoming-node text { font-family: var(--lab-number-font); font-variant-numeric: tabular-nums; }
+.hash-page .member-index { width: min(calc(100% - 32px), 420px); min-height: 0; padding: 24px 0; gap: 8px; }
+.index-row span:last-child { font-family: var(--lab-number-font); }
+.hash-page .structure-views { display: inline-flex; gap: 0; margin-bottom: 24px; }
+.structure-views button { border-radius: 0; }
+.structure-views button:first-child { border-radius: 3px 0 0 3px; }
+.structure-views button:last-child { border-radius: 0 3px 3px 0; margin-left: -1px; }
+.hash-page .structure-views button[aria-pressed=true] { background: var(--site-text); color: var(--site-bg); border-color: var(--site-text); position: relative; }
+@media (max-width:600px) {
+  .hash-header { margin-bottom: 24px; }
+  .hash-header h1 { font-size: 28px; }
+  .hash-visual { padding: 16px; }
+  .hash-page .hash-status { height: 144px; min-height: 144px; padding: 24px 0; }
+  .hash-inputs { gap: 12px; }
+  .hash-page .hash-playback { flex-direction: column; align-items: stretch; }
+  .hash-playback > div:last-child { justify-content: space-between; }
+  .hash-page .hash-explanation { margin-top: 32px; }
+  .hash-explanation p { font-size: 17px; }
+  .hash-explanation h2 { font-size: 19px; }
+}
+
+/* The simulator sits directly on the page, without an enclosing panel. */
+.hash-page .hash-visual {
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+.hash-page .hash-status {
+  border-top: 0;
+}
+.hash-page .hash-diagram-scroll {
+  scrollbar-color: var(--site-border) transparent;
+}
+.hash-page .hash-node,
+.hash-page .hash-bucket,
+.hash-page .hash-function,
+.hash-page .structure-node {
+  fill: transparent;
+  stroke-width: 1;
+}
+.hash-page .hash-diagram .is-highlighted,
+.hash-page .structure-node.highlighted {
+  fill: color-mix(in srgb, #e8b584 18%, var(--site-bg));
+  stroke: #c9773e;
+  stroke-width: 1.5;
+}
+.hash-page .hash-route,
+.hash-page .chain-link,
+.hash-page .structure-link {
+  stroke-width: 1;
+}
+.hash-page .structure-link.traversed-link { stroke-width: 1.5; }
+.hash-page .index-row {
+  border: 0;
+  border-bottom: 1px solid var(--site-border);
+  padding: 16px 0;
+}
+.hash-page .index-row.highlighted {
+  background: transparent;
+  border-bottom-color: #c9773e;
+}
+.hash-page .index-row.highlighted strong { color: #c9773e; }
+
+/* Match the simulator, controls, and reading column. */
+.hash-page { padding-inline: max(20px, calc((100vw - 720px) / 2)); }
+.hash-page .hash-header, .hash-page .hash-visual, .hash-page .hash-explanation { width: 100%; max-width: 720px; margin-inline: auto; }
+.hash-page .lab-stage { height: 380px; }
+.hash-page .hash-diagram { min-width: 630px; }
+.hash-page .hash-status { height: 96px; min-height: 96px; padding: 16px 0; }
+.hash-header a { border: 0; border-radius: 0; }
+.hash-page .hash-playback > div:first-child > button:first-child,
+.hash-page .hash-playback > div:first-child > button:nth-child(3) { border: 0; background: transparent; font-size: 22px; }
+.hash-page .hash-inputs { gap: 12px; }
+.hash-page .hash-inputs .nx-option { flex-basis: 100%; padding: 0; min-height: 28px; }
+.hash-page .hash-explanation .concept-details { border-bottom: 1px solid var(--site-border); padding: 24px 0; }
+.concept-details summary { list-style: none; display: flex; align-items: baseline; gap: 12px; cursor: pointer; }
+.concept-details summary::-webkit-details-marker { display: none; }
+.hash-explanation .concept-details summary h2 { margin: 0; }
+.concept-chevron { display: inline-block; font: 24px/1 var(--lab-body-font); transform-origin: center; transition: transform .15s; }
+.concept-details[open] .concept-chevron { transform: rotate(90deg); }
+.concept-details-content { padding-top: 16px; }
+.concept-details summary:focus-visible { outline: 2px solid #c9773e; outline-offset: 6px; }
+.concept-table-scroll { overflow-x: auto; margin-top: 24px; }
+.concept-table-scroll table { width: 100%; border-collapse: collapse; font-size: 16px; line-height: 1.7; text-align: left; }
+.concept-table-scroll th, .concept-table-scroll td { padding: 12px 8px; vertical-align: top; border-bottom: 1px solid var(--site-border); }
+.concept-table-scroll thead th { border-bottom: 2px solid var(--site-text); font-weight: 700; }
+.concept-table-scroll tbody th { font-weight: 400; width: 24%; }
+.concept-table-scroll td { color: var(--site-muted); width: 38%; }
+@media(max-width:600px) {
+  .hash-page { padding-inline: 20px; }
+  .hash-page .hash-status { height: 128px; min-height: 128px; }
+  .concept-table-scroll table { font-size: 15px; min-width: 480px; }
+}
+@media(prefers-reduced-motion:reduce) { .concept-chevron { transition: none; } }
+
+/* The simulation can breathe beyond the reading column without filling the page. */
+.hash-page { padding-inline: max(20px, calc((100vw - 880px) / 2)); }
+.hash-page .hash-header, .hash-page .hash-visual { max-width: 880px; }
+.hash-page .hash-explanation { max-width: 720px; }
+@media(max-width:600px) { .hash-page { padding-inline: 20px; } }
+
+/* Let the diagrams determine their height; scrolling belongs to the page. */
+.hash-page .lab-stage {
+  height: auto;
+  overflow: visible;
+  scrollbar-gutter: auto;
+}
+.hash-page .hash-diagram,
+.hash-page .structure-diagram {
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  height: auto;
+}
+.hash-page .hash-status {
+  height: auto;
+  overflow: visible;
+}

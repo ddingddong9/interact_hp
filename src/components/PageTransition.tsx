@@ -33,12 +33,15 @@ function PageTransition({ getPage, children }: Props) {
     function selectBook(event: MouseEvent) {
       pendingBook = null;
       if (event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
-      const link = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>('a.project-poster') : null;
+      const link = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>('a.series-chapter, a.project-poster') : null;
       if (!link || (link.target && link.target !== '_self')) return;
-      const bounds = link.getBoundingClientRect();
-      const style = getComputedStyle(link);
-      const artwork = link.cloneNode(true) as HTMLElement;
-      const originals = [link, ...link.querySelectorAll<HTMLElement>('*')];
+      const isLeaf = link.dataset.chapter === 'true';
+      const source = isLeaf ? link.closest<HTMLElement>('.project-poster')! : link;
+      const originalArtwork = isLeaf ? source.querySelector<HTMLElement>('.series-leaf')! : source;
+      const bounds = source.getBoundingClientRect();
+      const style = getComputedStyle(originalArtwork);
+      const artwork = originalArtwork.cloneNode(true) as HTMLElement;
+      const originals = [originalArtwork, ...originalArtwork.querySelectorAll<HTMLElement>('*')];
       const copies = [artwork, ...artwork.querySelectorAll<HTMLElement>('*')];
       originals.forEach((element, index) => {
         const computed = getComputedStyle(element);
@@ -49,16 +52,20 @@ function PageTransition({ getPage, children }: Props) {
       });
       Object.assign(artwork.style, {
         position: 'relative', left: '0px', top: '0px', margin: '0px',
-        width: `${link.offsetWidth}px`, height: `${link.offsetHeight}px`,
+        width: `${source.offsetWidth}px`, height: `${source.offsetHeight}px`,
         transform: 'none', visibility: 'visible', pointerEvents: 'none',
       });
+      if (isLeaf) {
+        artwork.querySelector('strong')!.textContent = link.dataset.posterTitle ?? '';
+        artwork.querySelector('.series-leaf__number')!.textContent = link.dataset.posterNumber ?? '';
+      }
       artwork.removeAttribute('href');
       artwork.tabIndex = -1;
       pendingBook = {
-        href: link.hash, title: link.dataset.posterTitle ?? '', number: link.dataset.posterNumber ?? '',
+        isLeaf, href: link.hash, title: link.dataset.posterTitle ?? '', number: link.dataset.posterNumber ?? '',
         color: style.backgroundColor, ink: style.color,
-        left: bounds.left, top: bounds.top, width: bounds.width, height: bounds.height, source: link,
-        artwork, layoutWidth: link.offsetWidth, layoutHeight: link.offsetHeight,
+        left: bounds.left, top: bounds.top, width: bounds.width, height: bounds.height, source,
+        artwork, layoutWidth: source.offsetWidth, layoutHeight: source.offsetHeight,
       };
     }
 
@@ -104,8 +111,10 @@ function PageTransition({ getPage, children }: Props) {
           commitPage();
         } else if (selectedBook?.source && selectedBook.width > 0 && selectedBook.height > 0) {
           flushSync(() => setTransitionPoster({ book: selectedBook, direction: 'enter' }));
-          hiddenBook = { element: selectedBook.source, visibility: selectedBook.source.style.visibility };
-          selectedBook.source.style.visibility = 'hidden';
+          if (!selectedBook.isLeaf) {
+            hiddenBook = { element: selectedBook.source, visibility: selectedBook.source.style.visibility };
+            selectedBook.source.style.visibility = 'hidden';
+          }
           await playPageMotion(surface!, commitPage, transition.signal, {
             layer: openingRef.current!, book: selectedBook, direction: 'enter',
           });
@@ -113,7 +122,7 @@ function PageTransition({ getPage, children }: Props) {
           flushSync(() => setTransitionPoster({ book: returningBook, direction: 'exit' }));
           await playPageMotion(surface!, commitPage, transition.signal, {
             layer: openingRef.current!, book: returningBook, direction: 'exit',
-            findTarget: () => surface!.querySelector<HTMLElement>(`[data-transition-href="${returningBook.href}"]`),
+            findTarget: () => { const target = surface!.querySelector<HTMLElement>(`[data-transition-href="${returningBook.href}"]`); return target?.closest<HTMLElement>('.project-poster') ?? target; },
           });
         } else {
           await playPageMotion(surface!, commitPage, transition.signal);
