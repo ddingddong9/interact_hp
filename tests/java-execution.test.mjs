@@ -90,7 +90,7 @@ test('overload exercises produce exact outputs and retain source session labels'
 });
 test('compile-time overload signature remains Object during runtime override', () => {
   const frames = lessons['overload-binding'].frames;
-  assert.ok(frames.some(f => f.locals.some(([name, value]) => name === '선택된 시그니처' && value === 'f(Object)')));
+  assert.ok(frames.some(f => f.locals.some(([name, value]) => name === '컴파일 시 선택한 메서드' && value === 'f(Object)')));
   assert.ok(frames.some(f => f.stack.at(-1) === 'B.f(Object)' && f.result === '"2"'));
   assert.ok(frames.every(f => !f.stack.includes('B.f(String)')));
 });

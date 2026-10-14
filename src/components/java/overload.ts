@@ -42,7 +42,7 @@ for (const [call, signature, body, parameters, result, variable] of [
   ["int r2 = m.func('A', 'C');", 'func(char, char)', 'return b - a;', [['a · char', "'A' · 65"], ['b · char', "'C' · 67"]], '2', 'r2 · int'],
   ["char r3 = m.func('3');", 'func(char)', 'return a;', [['a · char', "'3' · 51"]], "'3'", 'r3 · char'],
 ] as Array<[string, string, string, [string, string][], string, string]>) {
-  numeric.add(call, `인자 타입과 개수로 ${signature}를 선택합니다. 반환 타입으로 선택하는 것이 아닙니다.`, [...values, ['선택된 시그니처', signature]]);
+  numeric.add(call, `인자 타입과 개수로 ${signature}를 선택합니다. 반환 타입으로 선택하는 것이 아닙니다.`, [...values, ['컴파일 시 선택한 메서드', signature]]);
   numeric.stack.push(`Main.${signature}`);
   numeric.add(body, signature === 'func(char, char)' ? "char의 뺄셈은 int 연산으로 승격됩니다. 'C'의 67 − 'A'의 65 = 2입니다." : `이 메서드가 ${result}를 반환합니다.`, [['this', '100'], ...parameters], result);
   numeric.stack.pop();
@@ -74,7 +74,7 @@ binding.add('A a = new B();', 'B 객체 100을 만들고 생성자 실행을 마
 binding.ref('A a → 100');
 binding.stack.push('A.g()');
 binding.add('System.out.println(a.g());', 'B가 g()를 재정의하지 않았으므로 상속받은 A.g()를 실행합니다.', [['this', '100']]);
-binding.add('String g() { return f("a"); }', '이 호출은 A 안에 작성되어 있습니다. 컴파일러는 A에서 볼 수 있는 f(Object)를 선택합니다. B에만 있는 f(String)은 후보가 아닙니다.', [['인자 타입', 'String'], ['선택된 시그니처', 'f(Object)'], ['this', '100']]);
+binding.add('String g() { return f("a"); }', '이 호출은 A 안에 작성되어 있습니다. 컴파일러는 A에서 볼 수 있는 f(Object)를 선택합니다. B에만 있는 f(String)은 후보가 아닙니다.', [['인자 타입', 'String'], ['컴파일 시 선택한 메서드', 'f(Object)'], ['this', '100']]);
 binding.stack.push('B.f(Object)');
 binding.add('String f(Object x) { return "2"; }', '실제 객체가 B이므로 선택된 f(Object)의 재정의 구현 B.f(Object)를 실행합니다. f(String)으로 다시 고르지 않습니다.', [['x · Object', '"a"'], ['this', '100']], '"2"');
 binding.stack.pop();

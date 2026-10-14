@@ -33,7 +33,7 @@ exam.objects.push({ address: 100, type: 'Child', fields: [] });
 exam.add('Parent ref = new Child();', '주소 100에 Child 객체를 만듭니다. 인스턴스 필드를 선언하지 않은 객체입니다.', ['main', 'Child()']);
 exam.add('Parent ref = new Child();', '생략된 생성자를 Child → Parent → Object 순서로 호출하고 돌아옵니다.', ['main', 'Child()', 'Parent()', 'Object()']);
 exam.add('Parent ref = new Child();', '생성자가 끝났습니다. 선언 타입 Parent인 ref에 객체 100의 참조를 저장합니다.', ['main'], 'Parent ref → 100');
-exam.add(expression, '먼저 ref.x(2)를 평가합니다. 인자 2는 int이므로 x(int)를 선택합니다. x(String)은 호출되지 않습니다.', ['main'], 'Parent ref → 100', '', [['선택된 시그니처', 'x(int)']]);
+exam.add(expression, '먼저 ref.x(2)를 평가합니다. 인자 2는 int이므로 x(int)를 선택합니다. x(String)은 호출되지 않습니다.', ['main'], 'Parent ref → 100', '', [['컴파일 시 선택한 메서드', 'x(int)']]);
 exam.add(expression, '실제 객체 100은 Child입니다. 재정의된 Child.x(int)로 이동합니다.', ['main', 'Child.x(2)'], 'Parent ref → 100', '', [['this', '100'], ['i', '2']]);
 exam.add('public int x(int i) { return i + 3; }', 'Child의 구현에서 2 + 3을 계산하여 5를 반환합니다.', ['main', 'Child.x(2)'], 'Parent ref → 100', '5', [['this', '100'], ['i', '2']]);
 exam.add(expression, 'ref.x(2)의 결과 5를 남겨 두고, 오른쪽 ref.id()를 평가합니다.', ['main'], 'Parent ref → 100', '', [['왼쪽 결과', '5']]);
