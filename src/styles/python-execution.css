@@ -1,0 +1,25 @@
+.python-memory h2 { margin:0 0 16px; font-size:17px; font-weight:500; }
+.python-memory h2 small { font-size:12px; opacity:.55; }
+.python-bindings { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-bottom:24px; }
+.python-binding { border:1px solid var(--site-border); border-radius:3px; padding:8px 10px; display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:14px; }
+.python-binding>span { min-width:0; overflow-wrap:anywhere; }
+.python-binding small { display:block; font:12px/1.5 ui-monospace,monospace; opacity:.6; }
+.python-page .python-reference { padding:0 3px; min-height:32px; height:auto; font:14px/1.6 ui-monospace,monospace; border:0; color:#376e9a; white-space:nowrap; }
+:root.dark .python-page .python-reference { color:#83baff; }
+.python-objects { display:grid; gap:20px; }
+.python-object { border:1px solid var(--site-border); border-radius:4px; padding:12px; }
+.python-object.is-current { background:color-mix(in srgb,currentColor 4%,transparent); }
+.python-object.is-linked,.python-binding.is-linked { outline:1px solid color-mix(in srgb,currentColor 50%,transparent); outline-offset:2px; }
+.python-object>header { display:flex; justify-content:space-between; gap:12px; font-size:13px; }
+.python-object>header code { font-size:15px; }
+.python-object>header>span:last-child { opacity:.65; }
+.python-object-value { margin:12px 0; font-size:14px; overflow-wrap:anywhere; line-height:1.6; }
+.python-elements { list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(auto-fit,minmax(42px,1fr)); gap:6px; }
+.python-elements li { min-width:0; }
+.python-index { display:flex; justify-content:space-around; gap:4px; padding:0 0 5px; font:12px/1.5 ui-monospace,monospace; opacity:.65; }
+.python-index>span:last-child:not(:first-child) { opacity:.65; }
+.python-elements li>div:last-child { display:flex; align-items:center; justify-content:center; border:1px solid var(--site-border); border-radius:2px; min-height:38px; padding:3px; font:14px/1.6 ui-monospace,monospace; overflow-wrap:anywhere; }
+.python-elements .is-chosen>div:last-child { background:color-mix(in srgb,currentColor 8%,transparent); border-color:color-mix(in srgb,currentColor 45%,transparent); }
+.python-page .java-example-select select { min-width:0; width:min(100%,440px); }
+@media(max-width:380px) { .python-bindings { grid-template-columns:1fr; } }
+.python-binding.is-current { background:color-mix(in srgb,currentColor 4%,transparent); }

@@ -1,0 +1,28 @@
+.c-memory h2 { margin:0 0 12px; font-size:17px; font-weight:500; }
+.c-memory h2 small { font-size:12px; opacity:.55; margin-left:5px; }
+.c-memory-region { margin-top:22px; }
+.c-memory-region h3 { margin:0 0 12px; font-size:14px; font-weight:500; }
+.c-cells { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px 12px; }
+.c-cell { width:100%; padding:0; border:1px solid color-mix(in srgb,currentColor 25%,transparent); border-radius:4px; color:inherit; background:transparent; text-align:left; cursor:pointer; font:inherit; }
+.c-cell header { display:flex; flex-direction:column; gap:5px; padding:9px 10px; border-bottom:1px solid color-mix(in srgb,currentColor 20%,transparent); }
+.c-cell header strong { font:14px/1.5 ui-monospace,monospace; overflow-wrap:anywhere; }
+.c-cell header span { font:12px/1.5 ui-monospace,monospace; opacity:.7; overflow-wrap:anywhere; }
+.c-cell>div { display:flex; justify-content:space-between; align-items:start; gap:8px; padding:7px 10px; font-size:12px; }
+.c-cell>div code { font-size:14px; overflow-wrap:anywhere; color:#376e9a; }
+:root.dark .c-cell>div code { color:#83baff; }
+.c-cell.is-current { background:color-mix(in srgb,currentColor 5%,transparent); }
+.c-cell.is-selected { outline:1px solid currentColor; outline-offset:2px; }
+.c-cell.is-freed { opacity:.6; border-style:dashed; }
+.c-target { display:flex; align-items:start; gap:6px; margin-top:7px; font-size:12px; line-height:1.6; overflow-wrap:anywhere; }
+.c-target>span:first-child { flex-shrink:0; opacity:.65; }
+.c-target button { border:0; padding:0; text-align:left; background:transparent; color:inherit; font:inherit; cursor:pointer; overflow-wrap:anywhere; }
+.c-cell:focus-visible,.c-target button:focus-visible { outline:2px solid currentColor; outline-offset:3px; }
+.c-path { font:14px/1.8 ui-monospace,monospace; margin:20px 0 0; overflow-wrap:anywhere; }
+.c-page .java-console pre { margin:0; font:14px/1.7 ui-monospace,monospace; white-space:pre-wrap; }
+@media(max-width:380px) { .c-cells { grid-template-columns:1fr; } }
+/* Memory cells and visit badges must grow independently of utility controls. */
+.c-page .c-cell { height:auto; min-height:0; padding:0; display:block; font:inherit; }
+.c-page .c-cell.is-current { background:color-mix(in srgb,currentColor 5%,transparent); }
+.c-page .c-target button { height:auto; min-height:24px; padding:0; border:0; font:inherit; }
+.c-page .java-line-orders button { height:24px; min-height:24px; padding:0 4px; font:11px/1.8 ui-monospace,monospace; }
+.c-page .java-line-orders { align-items:center; }

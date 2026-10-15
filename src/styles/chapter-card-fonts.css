@@ -1,0 +1,5 @@
+@font-face { font-family:"Libre Baskerville"; font-style:normal; font-weight:400; font-display:swap; src:url("/fonts/chapter-serif.ttf") format("truetype"); }
+@font-face { font-family:"Noto Sans KR"; font-style:normal; font-weight:400; font-display:swap; src:url("/fonts/chapter-korean.ttf") format("truetype"); }
+@font-face { font-family:"IBM Plex Mono"; font-style:normal; font-weight:400; font-display:swap; src:url("/fonts/chapter-mono.ttf") format("truetype"); }
+
+@font-face {font-family:"DM Serif Display";font-style:normal;font-weight:400;font-display:swap;src:url("/fonts/chapter-display.ttf") format("truetype");}

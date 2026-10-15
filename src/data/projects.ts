@@ -1,3 +1,5 @@
+import { pythonChapters } from '../components/python/catalog';
+import { cLessons } from '../components/c/lessons';
 export const projects = [
   { href: '#hash-table', title: 'Data Structures', eyebrow: '', description: '', chapters: [
     { href: '#hash-table', title: 'Hash Table' },
@@ -21,4 +23,6 @@ export const projects = [
     { href: '#java-method-overloading', title: 'Method Overloading' },
     { href: '#java-compile-time-binding', title: 'Compile-time Binding' },
   ] },
+  { href: '#c-pointer-basics', title: 'C', eyebrow: '', description: '', chapters: cLessons.map(lesson => ({ href: `#c-${lesson.id}`, title: lesson.title })) },
+  { href: '#python-string-indexing', title: 'Python', eyebrow: '', description: '', chapters: pythonChapters.map(lesson => ({ href: `#python-${lesson.id}`, title: lesson.title })) },
 ];

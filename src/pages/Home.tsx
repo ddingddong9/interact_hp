@@ -9,12 +9,12 @@ export default function Home() {
       <section className="intro">
         <InteractiveMonogram />
         <p>
-          자료구조와 시스템의 동작을 직접 눈으로 확인하며 배웁니다.
+          자료구조와 시스템의 동작, Java·C·Python의 실행 과정을 시각화합니다.
           <br />
-          React와 TypeScript로 개념을 조작해 볼 수 있는 시뮬레이터를 만듭니다.
+          코드를 한 줄씩 따라가며 변수와 메모리의 변화를 확인할 수 있습니다.
         </p>
       </section>
-      <ProjectList />
+      <ProjectList chapterCards />
       <footer><p>© 2026 권재원</p></footer>
     </main>
   );

@@ -1,4 +1,8 @@
-import { useEffect } from 'react';
+import { pythonChapters } from './components/python/catalog';
+import ChapterNavigation from './components/ChapterNavigation';
+import CExecution from './pages/CExecution';
+import { cLessons } from './components/c/lessons';
+import { lazy, Suspense, useEffect } from 'react';
 import ThemeToggle from './components/ThemeToggle';
 import PageTransition from './components/PageTransition';
 import Home from './pages/Home';
@@ -11,7 +15,11 @@ import AdmissionControl from './pages/AdmissionControl';
 import StructureLab from './pages/StructureLab';
 import type { Kind } from './components/structures/model';
 
+const PythonExecution = lazy(() => import('./pages/PythonExecution'));
+
 const titles: Record<string, string> = {
+  ...Object.fromEntries(pythonChapters.map(l => [`#python-${l.id}`, l.title])),
+  ...Object.fromEntries(cLessons.map(l => [`#c-${l.id}`, l.title])),
   '#java-constructor-chaining': 'Constructor Chaining',
   '#java-super-this': 'super & this',
   '#java-compile-time-binding': 'Compile-time Binding',
@@ -34,7 +42,7 @@ function getPage() {
 }
 function Page({ page }: { page: string }) {
   useEffect(() => { document.title = titles[page]; }, [page]);
-  return <><ThemeToggle visible={page === '#home'} />{page.startsWith('#java-') ? <JavaExecution key={page} kind={page.slice(6) as JavaKind} /> : page === '#home' ? <Home /> : page === '#hash-table' ? <HashTable /> : page === '#race-condition' ? <RaceCondition /> : page === '#lua-script' ? <LuaScript /> : page === '#admission-control' ? <AdmissionControl /> : <StructureLab key={page} kind={page.slice(1) as Kind} />}</>;
+  return <><ThemeToggle visible={page === '#home'} />{page.startsWith('#python-') ? <Suspense fallback={null}><PythonExecution key={page} kind={page.slice(8)} /></Suspense> : page.startsWith('#c-') ? <CExecution key={page} kind={page.slice(3)} /> : page.startsWith('#java-') ? <JavaExecution key={page} kind={page.slice(6) as JavaKind} /> : page === '#home' ? <Home /> : page === '#hash-table' ? <HashTable /> : page === '#race-condition' ? <RaceCondition /> : page === '#lua-script' ? <LuaScript /> : page === '#admission-control' ? <AdmissionControl /> : <StructureLab key={page} kind={page.slice(1) as Kind} />}<ChapterNavigation page={page} /></>;
 }
 export default function App() {
   return <PageTransition getPage={getPage}>{page => <Page page={page} />}</PageTransition>;

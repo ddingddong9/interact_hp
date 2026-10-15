@@ -1,3 +1,8 @@
+import { chapterNotations, chapterCardColor } from '../data/chapterCardDesign';
+import { focusChapterCard } from './ProjectList';
+import { koreanChapterNames } from '../data/chapterNames';
+import { chapterDirection, chapterLocation } from './ChapterNavigation';
+import { playChapterMotion } from './chapterMotion';
 import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { flushSync } from 'react-dom';
@@ -56,8 +61,12 @@ function PageTransition({ getPage, children }: Props) {
         transform: 'none', visibility: 'visible', pointerEvents: 'none',
       });
       if (isLeaf) {
-        artwork.querySelector('strong')!.textContent = link.dataset.posterTitle ?? '';
+        const leafTitle = artwork.querySelector<HTMLElement>('strong')!;
+        leafTitle.textContent = link.dataset.posterTitle ?? '';
+        leafTitle.style.height = 'auto';
         artwork.querySelector('.series-leaf__number')!.textContent = link.dataset.posterNumber ?? '';
+        const korean = artwork.querySelector<HTMLElement>('.series-leaf__korean');
+        if (korean) { korean.textContent = link.dataset.posterKorean ?? ''; korean.style.height = 'auto'; }
       }
       artwork.removeAttribute('href');
       artwork.tabIndex = -1;
@@ -71,9 +80,29 @@ function PageTransition({ getPage, children }: Props) {
 
     async function changePage() {
       const nextPage = getPage();
+      const chapterTurn = chapterDirection(currentPage.current, nextPage);
       const selectedBook = pendingBook?.href === nextPage ? pendingBook : null;
       const returningBook = nextPage === '#home' && currentPage.current !== '#home' ? lastProject : null;
+      if (returningBook && !returningBook.isLeaf) focusChapterCard(returningBook.href);
       if (selectedBook) lastProject = selectedBook;
+      if (chapterTurn && lastProject) {
+        const destination = chapterLocation(nextPage)!;
+        const artwork = lastProject.artwork.cloneNode(true) as HTMLElement;
+        const title = destination.book.chapters[destination.index].title;
+        const number = `${destination.index + 1}p`;
+        const leafTitle = artwork.querySelector<HTMLElement>('strong');
+        const leafNumber = artwork.querySelector('.series-leaf__number');
+        if (leafTitle) { leafTitle.textContent = title; leafTitle.style.height = 'auto'; }
+        const korean = artwork.querySelector<HTMLElement>('.series-leaf__korean, .chapter-card__korean');
+        if (korean) { korean.textContent = koreanChapterNames[title] ?? ''; korean.style.height = 'auto'; }
+        const notation = artwork.querySelector('.chapter-card__notation');
+        if (notation) notation.textContent = chapterNotations[title] ?? '';
+        if (artwork.classList.contains('chapter-card')) artwork.style.setProperty('--poster-color', chapterCardColor(destination.book.title, destination.index, destination.book.chapters.length));
+        const cardNumber = artwork.querySelector('.chapter-card__number');
+        if (cardNumber) cardNumber.textContent = String(destination.index + 1).padStart(2, '0');
+        if (leafNumber) leafNumber.textContent = number;
+        lastProject = { ...lastProject, href: nextPage, title, number, artwork };
+      }
       pendingBook = null;
       const request = ++navigation;
       controller?.abort();
@@ -102,13 +131,15 @@ function PageTransition({ getPage, children }: Props) {
         const saved = scrollPositions.get(nextPage);
         const nextScroll = surface!.querySelector<HTMLElement>('[data-page-scroll]');
         const nextShelf = surface!.querySelector<HTMLElement>('[data-shelf-scroll]');
-        if (nextScroll) nextScroll.scrollTop = saved?.top ?? 0;
+        if (nextScroll) nextScroll.scrollTop = chapterTurn ? 0 : saved?.top ?? 0;
         if (nextShelf) nextShelf.scrollLeft = saved?.shelf ?? 0;
       }
 
       try {
         if (!motion) {
           commitPage();
+        } else if (chapterTurn) {
+          await playChapterMotion(surface!, commitPage, transition.signal, chapterTurn);
         } else if (selectedBook?.source && selectedBook.width > 0 && selectedBook.height > 0) {
           flushSync(() => setTransitionPoster({ book: selectedBook, direction: 'enter' }));
           if (!selectedBook.isLeaf) {
