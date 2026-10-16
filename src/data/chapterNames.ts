@@ -1,4 +1,6 @@
+import { theoryChapters } from '../components/theory/model';
 export const koreanChapterNames: Record<string, string> = {
+  ...Object.fromEntries(theoryChapters.map(c => [c.title, c.korean])),
   'Abstract Class': '추상 클래스와 추상 메서드',
   'String Indexing': '문자열 인덱싱',
   'String Slicing': '문자열 슬라이싱',

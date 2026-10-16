@@ -19,7 +19,7 @@ import '../styles/chapter-card-tokens.css';
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 const bookShelf = [...projects.map(project => ({ ...project, project, category: project.title })), null, null, null];
-const hues = [28, 58, 92, 136, 172, 208];
+const hues = [28, 58, 92, 136, 172, 208, 260, 205, 330];
 const chapterShelf = [...projects.flatMap((project, category) => project.chapters.map((chapter, index) => ({
   ...chapter, category: project.title, chapterIndex: index, chapterCount: project.chapters.length, hue: hues[category], project: null,
 }))), null, null, null];

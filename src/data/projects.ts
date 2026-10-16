@@ -1,3 +1,4 @@
+import { theoryChapters } from '../components/theory/model';
 import { pythonChapters } from '../components/python/catalog';
 import { cLessons } from '../components/c/lessons';
 export const projects = [
@@ -26,4 +27,8 @@ export const projects = [
   ] },
   { href: '#c-pointer-basics', title: 'C', eyebrow: '', description: '', chapters: cLessons.map(lesson => ({ href: `#c-${lesson.id}`, title: lesson.title })) },
   { href: '#python-string-indexing', title: 'Python', eyebrow: '', description: '', chapters: pythonChapters.map(lesson => ({ href: `#python-${lesson.id}`, title: lesson.title })) },
+  ...['Operating Systems', 'Networks', 'Software Design'].map(category => {
+    const chapters = theoryChapters.filter(c => c.category === category).map(c => ({ href: `#theory-${c.id}`, title: c.title }));
+    return { href: chapters[0].href, title: category, eyebrow: '', description: '', chapters };
+  }),
 ];

@@ -1,4 +1,5 @@
 export const chapterNotations: Record<string, string> = {
+  'Process Scheduling':'ready → CPU → done', 'Subnet Mask':'IP AND mask', 'CIDR & Prefix':'network / prefix', 'Block Size':'256 − mask octet', 'Subnetting':'/24 → 4 × /26', 'Rumbaugh Modeling':'object / dynamic / function',
   'Abstract Class':'abstract → override',
   'Hash Table':'key → hash → value', 'Linked List':'node → next → node', 'Skip List':'level 3 → 2 → 1', 'Sorted Set':'member + score → rank',
   'Race Condition':'read → check → write', 'Lua Script':'check → update → return', 'Admission Control':'FIFO → rate + active',
@@ -7,6 +8,9 @@ export const chapterNotations: Record<string, string> = {
   'String Indexing':'s[i] / s[-1]', 'String Slicing':'s[start:end:step]', 'String Split':'"a,b" → ["a", "b"]', 'String Join':'["a", "b"] → "a,b"', 'List Basics & Methods':'append / pop / sort', 'List Slicing':'items[start:end]', '2D Lists':'rows[i][j]', 'List Concatenation':'list + list / list * n', 'Shallow Copy & Mutability':'a → inner ← b',
 };
 const categoryColors: Record<string, string> = {
+  'Operating Systems': '#a898ed',
+  'Networks': '#55b6ee',
+  'Software Design': '#ed8eb9',
   'Data Structures': '#fd8072',
   'Concurrency': '#f28f36',
   'Booking System': '#cea600',
