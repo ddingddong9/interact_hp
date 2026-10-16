@@ -1,4 +1,5 @@
 export const koreanChapterNames: Record<string, string> = {
+  'Abstract Class': '추상 클래스와 추상 메서드',
   'String Indexing': '문자열 인덱싱',
   'String Slicing': '문자열 슬라이싱',
   'String Split': '문자열 나누기',

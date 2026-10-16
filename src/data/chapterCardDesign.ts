@@ -1,4 +1,5 @@
 export const chapterNotations: Record<string, string> = {
+  'Abstract Class':'abstract → override',
   'Hash Table':'key → hash → value', 'Linked List':'node → next → node', 'Skip List':'level 3 → 2 → 1', 'Sorted Set':'member + score → rank',
   'Race Condition':'read → check → write', 'Lua Script':'check → update → return', 'Admission Control':'FIFO → rate + active',
   'Constructor Chaining':'A() → B()', 'super & this':'super / this', 'Field Hiding':'A.x / B.x', 'Method Overriding':'A ref → B.f()', '@Override':'@Override → compile', 'Method Overloading':'f(int) / f(String)', 'Compile-time Binding':'type → signature',

@@ -20,6 +20,7 @@ const PythonExecution = lazy(() => import('./pages/PythonExecution'));
 const titles: Record<string, string> = {
   ...Object.fromEntries(pythonChapters.map(l => [`#python-${l.id}`, l.title])),
   ...Object.fromEntries(cLessons.map(l => [`#c-${l.id}`, l.title])),
+  '#java-abstract-class': 'Abstract Class',
   '#java-constructor-chaining': 'Constructor Chaining',
   '#java-super-this': 'super & this',
   '#java-compile-time-binding': 'Compile-time Binding',

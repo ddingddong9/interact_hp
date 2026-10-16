@@ -1,8 +1,9 @@
+import { abstractLessons } from './abstract.ts';
 import { bindingLessons } from './binding.ts';
 import { overloadLessons } from './overload.ts';
 import { annotationLessons, type CompileState } from './annotation.ts';
 import { methodLessons } from './methods.ts';
-export type JavaKind = 'constructor-chaining' | 'super-this' | 'field-hiding' | 'method-dispatch' | 'overriding-practice' | keyof typeof annotationLessons | keyof typeof overloadLessons | keyof typeof bindingLessons;
+export type JavaKind = 'constructor-chaining' | 'super-this' | 'field-hiding' | 'method-dispatch' | 'overriding-practice' | keyof typeof annotationLessons | keyof typeof overloadLessons | keyof typeof bindingLessons | keyof typeof abstractLessons;
 export type JavaObject = { address: number; type: string; fields: [string, string][] };
 export type BindingState = { phase: 'compile' | 'runtime'; site: string; declared: string; argument: string; candidates: string[]; signature: string; implementation?: string };
 export type Frame = { line: number; message: string; stack: string[]; fields: [string, string][]; output: string[]; allocated: boolean; address: number | null; reference: string; result: string; objects?: JavaObject[]; locals?: [string, string][]; compile?: CompileState; diagnostic?: string; binding?: BindingState };
@@ -20,6 +21,7 @@ const dogDefaults: [string, string][] = [['Animal.name', 'null'], ['Dog.name', '
 const animal: [string, string][] = [['Animal.name', '"동물"'], ['Dog.name', 'null']];
 const dog: [string, string][] = [['Animal.name', '"동물"'], ['Dog.name', '"강아지"']];
 export const lessons: Record<JavaKind, Lesson> = {
+  ...abstractLessons,
   ...methodLessons,
   ...annotationLessons,
   ...overloadLessons,
