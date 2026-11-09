@@ -24,6 +24,7 @@
 - The user has now authorized completing all remaining concept modules (Linked List, Skip List, Sorted Set). Keep the home design; do not add unrelated modules or independently redesign it.
 - Preserve the original home header, name, self-introduction, interactive monogram, and copyright footer. The user clarified that “concept names only” applies to the four learning cards, not the whole home page. Do not add new slogans, decorative headings, learning-roadmap copy, or promotional text.
 - The user explicitly rejected phrases such as “보이지 않는 구조를, 손으로 이해하기”, “데이터가 움직이는 방식을 탐험하세요”, and “작은 자료구조에서 대규모 예매 대기열까지”. Do not reintroduce them or similar filler.
+- Home monogram is now a self-similar fractal: the KJW strokes are made of smaller KJW copies on an N x N grid (each cell similar to the 4:3 box). Press and hold (pointer, touch, Space/Enter) zooms continuously into a cell around the box-to-cell fixed point; release decelerates and settles exactly on the next level boundary, which must match the resting frame. Reduced motion disables the zoom. The user rejected the recursive-tree background, cards-within-cards shelf, and golden-spiral layout prototypes.
 - Keep concept screens visually simple and easy to follow. Use teaching text only where it is needed to explain the current operation; avoid dense dashboards and simultaneous panels.
 - These requirements supersede the previous learning-site implementation direction and any conflicting historical art instructions below.
 
