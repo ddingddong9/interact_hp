@@ -2,8 +2,10 @@ import { useMemo, useRef, useState } from 'react';
 import { cssVar, reducedMotion, useCanvas } from './useCanvas';
 
 // 2) KJW의 획을 더 작은 KJW로 채운 자기유사 모노그램. 클릭하면 한 칸 안으로 확대되어 처음 화면으로 이어집니다.
-const COLS = 40;
-const ROWS = 30; // 상자(4:3)와 같은 비율이라 한 칸이 전체와 정확히 닮은꼴입니다.
+// 가로·세로를 같은 칸 수로 나누므로 각 칸이 상자(4:3)와 정확히 닮은꼴입니다.
+const COLS = 36;
+const ROWS = 36;
+const BOX_ASPECT = 4 / 3;
 const ZOOM_MS = 3200;
 
 function buildMask() {
@@ -12,10 +14,12 @@ function buildMask() {
   const g = c.getContext('2d')!;
   g.fillStyle = '#000';
   g.textAlign = 'center'; g.textBaseline = 'middle';
+  // 마스크 한 칸은 화면에서 4:3으로 늘어나므로 글자를 가로로 미리 눌러 그립니다.
+  g.scale(1 / BOX_ASPECT, 1);
   g.font = `900 100px Arial, sans-serif`;
-  const size = Math.min(100 * (COLS * 0.84) / g.measureText('KJW').width, ROWS * 0.78);
+  const size = Math.min(100 * (COLS * BOX_ASPECT * 0.84) / g.measureText('KJW').width, ROWS * 0.55);
   g.font = `900 ${size}px Arial, sans-serif`;
-  g.fillText('KJW', COLS / 2, ROWS / 2 + size * 0.04);
+  g.fillText('KJW', (COLS * BOX_ASPECT) / 2, ROWS / 2 + size * 0.04);
   const data = g.getImageData(0, 0, COLS, ROWS).data;
   const cells: Array<[number, number]> = [];
   for (let y = 0; y < ROWS; y++) for (let x = 0; x < COLS; x++) if (data[(y * COLS + x) * 4 + 3] > 110) cells.push([x, y]);
@@ -41,8 +45,9 @@ export default function FractalMonogram() {
       if (t >= 1) { zoomStart.current = null; t = 0; setPlaying(false); }
     }
     const eased = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
-    const scale = COLS ** eased; // 1 → 64배: 목표 칸이 상자 전체가 됨
-    const tx = ((target[0] + 0.5) / COLS) * w, ty = ((target[1] + 0.5) / ROWS) * h;
+    const scale = COLS ** eased; // 1 → 36배: 목표 칸이 상자 전체가 됨
+    // "상자 → 목표 칸" 축소 변환의 고정점. 이 점을 중심으로 확대해야 마지막 장면이 첫 장면과 정확히 겹칩니다.
+    const tx = (target[0] * w) / (COLS - 1), ty = (target[1] * h) / (ROWS - 1);
     ctx.clearRect(0, 0, w, h);
     // 화면 좌표로 잘라내면서, 칸이 충분히 크면 그 칸 안에 다시 KJW 패턴을 그립니다.
     const draw = (x: number, y: number, rw: number, rh: number) => {
