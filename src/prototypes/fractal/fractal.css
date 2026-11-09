@@ -6,6 +6,7 @@
 .fractal-tree { position: absolute; z-index: 0; top: 0; left: 0; width: 100%; height: 780px; pointer-events: none; }
 
 /* 2 자기유사 모노그램 */
+.fractal-monogram { touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
 .fractal-monogram canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 
 /* 3 카드 안의 카드 */
