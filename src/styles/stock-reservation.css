@@ -1,0 +1,32 @@
+.drop-state{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin:0 0 8px;padding:0}
+.drop-state>div{border-bottom:1px solid var(--site-border);padding:16px 0}
+.drop-state dt{font-size:16px;color:var(--site-muted)}
+.drop-state dd{margin:12px 0 0;font:24px/1.2 var(--lab-number-font);color:var(--site-text);white-space:nowrap}
+.drop-stage{background:transparent;margin:0 auto;max-width:820px}
+.drop-stage .iso-svg{width:100%;height:auto}
+.drop-controls{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid var(--site-border);margin-top:24px;padding-top:24px}
+.drop-controls>div{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.drop-controls button{white-space:nowrap}
+.drop-sql{margin:16px 0 0;padding:14px 16px;border:1px solid var(--site-border);font:14px/1.7 var(--lab-number-font);color:var(--site-text);overflow-x:auto}
+@media(max-width:600px){.drop-stage{margin:0 -12px}.drop-state{grid-template-columns:repeat(2,1fr);gap:12px}.drop-state dd{font-size:20px}.drop-state dt{font-size:14px}}
+.drop-stage [data-on]{transition:opacity .3s}
+.drop-stage [data-on="false"]{opacity:.18}
+.drop-stage [data-on="true"] .iso-edge{stroke-width:1.2px}
+.drop-state dd.is-alert{color:#d9534f}
+.drop-options{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+.drop-options .race-mode{display:inline-flex}
+.drop-options .race-mode button{border-radius:0}
+.drop-options .race-mode button+button{margin-left:-1px}
+.drop-options .race-mode button[aria-pressed=true]{background:var(--site-text);color:var(--site-bg);border-color:var(--site-text)}
+.drop-state--five{grid-template-columns:repeat(5,1fr);gap:18px}
+.drop-state--five dd{font-size:22px}
+@media(max-width:600px){.drop-state--five{grid-template-columns:repeat(2,1fr)}}
+.drop-stage [data-card]{transition:opacity .35s}
+.drop-stage [data-card][data-status="NONE"]{opacity:0}
+.drop-stage [data-card] .drop-stamp-fill{transition:opacity .35s;opacity:0}
+.drop-stage [data-card][data-status="PAYMENT_WAIT"] .drop-stamp-ring{opacity:.45}
+.drop-stage [data-card][data-status="PAID"] .drop-stamp-fill{opacity:1}
+.drop-stage [data-card][data-status="FAILED"] .drop-stamp-ring{opacity:1}
+.drop-state dd.drop-small{font-size:16px;white-space:normal;line-height:1.5}
+@media(min-width:601px){.drop-state:has(.drop-state__wide){grid-template-columns:1fr 2fr 1fr}}
+.drop-stage :is(.drop-coin,.drop-keycard,[data-part^="reply"])[data-on="false"]{opacity:0}
