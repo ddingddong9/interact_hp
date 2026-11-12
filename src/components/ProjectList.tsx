@@ -18,21 +18,41 @@ import '../styles/chapter-card-tokens.css';
 
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
-const bookShelf = [...projects.map(project => ({ ...project, project, category: project.title })), null, null, null];
 const hues = [28, 58, 92, 136, 172, 208, 260, 205, 330];
-const chapterShelf = [...projects.flatMap((project, category) => project.chapters.map((chapter, index) => ({
-  ...chapter, category: project.title, chapterIndex: index, chapterCount: project.chapters.length, hue: hues[category], project: null,
-}))), null, null, null];
-const rememberedProjectIndices = { books: 0, cards: chapterShelf.findIndex(item => item?.category === 'Java') };
+const bookShelf = [...projects.map(project => ({ ...project, project, category: project.title })), null, null, null];
+// 홈의 첫 화면: 시리즈마다 카드 한 장. 누르면 그 시리즈의 챕터 카드만 펼친다.
+const seriesShelf = [...projects.map((project, category) => ({
+  kind: 'series' as const, href: `#series-${category}`, title: project.title, category: project.title,
+  chapters: project.chapters, chapterCount: project.chapters.length, hue: hues[category], project: null,
+})), null, null, null];
+const chaptersOf = (title: string) => {
+  const category = projects.findIndex(project => project.title === title);
+  const project = projects[category];
+  return [...project.chapters.map((chapter, index) => ({
+    ...chapter, category: project.title, chapterIndex: index, chapterCount: project.chapters.length, hue: hues[category], project: null,
+  })), null, null, null];
+};
+type ShelfItem = (typeof bookShelf)[number] | (typeof seriesShelf)[number] | ReturnType<typeof chaptersOf>[number];
+const memory = { open: null as string | null, index: {} as Record<string, number> };
 export function focusChapterCard(href: string) {
-  const index = chapterShelf.findIndex(item => item?.href === href);
-  if (index >= 0) rememberedProjectIndices.cards = index;
+  const project = projects.find(book => book.chapters.some(chapter => chapter.href === href));
+  if (!project) return;
+  memory.open = project.title;
+  memory.index[project.title] = project.chapters.findIndex(chapter => chapter.href === href);
+  memory.index.series = projects.indexOf(project);
 }
 
 function ProjectList({ chapterCards = false }: { chapterCards?: boolean }) {
-  const mode = chapterCards ? 'cards' : 'books';
-  const shelf = chapterCards ? chapterShelf : bookShelf;
-  const rememberedProjectIndex = rememberedProjectIndices[mode];
+  const [open, setOpen] = useState<string | null>(chapterCards ? memory.open : null);
+  if (!chapterCards) return <Shelf shelf={bookShelf} memoryKey="books" chapterCards={false} />;
+  const choose = (title: string | null) => { memory.open = title; setOpen(title); };
+  return <Shelf key={open ?? 'series'} shelf={open ? chaptersOf(open) : seriesShelf} memoryKey={open ?? 'series'} chapterCards openSeries={open} onChoose={choose} />;
+}
+
+type ShelfProps = { shelf: ShelfItem[]; memoryKey: string; chapterCards: boolean; openSeries?: string | null; onChoose?: (title: string | null) => void };
+function Shelf({ shelf, memoryKey, chapterCards, openSeries = null, onChoose }: ShelfProps) {
+  const mode = memoryKey;
+  const rememberedProjectIndex = memory.index[mode] ?? 0;
   const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLUListElement>(null);
   const posterRefs = useRef<Array<HTMLLIElement | null>>([]);
@@ -110,7 +130,7 @@ function ProjectList({ chapterCards = false }: { chapterCards?: boolean }) {
     if (closestIndex !== activeIndexRef.current) {
       posterRefs.current[activeIndexRef.current]?.classList.remove('is-active');
       activeIndexRef.current = closestIndex;
-      rememberedProjectIndices[mode] = closestIndex;
+      memory.index[mode] = closestIndex;
       posterRefs.current[closestIndex]?.classList.add('is-active');
       setActiveIndex(closestIndex);
     }
@@ -304,6 +324,7 @@ function ProjectList({ chapterCards = false }: { chapterCards?: boolean }) {
   }
 
   function handleKeyDown(event: ReactKeyboardEvent<HTMLDivElement>) {
+    if (event.key === 'Escape' && openSeries) { event.preventDefault(); onChoose?.(null); return; }
     if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
     event.preventDefault();
     snapTo(activeIndexRef.current + (event.key === 'ArrowRight' ? 1 : -1));
@@ -317,7 +338,7 @@ function ProjectList({ chapterCards = false }: { chapterCards?: boolean }) {
   }
 
   return (
-    <section className={`project-section ${chapterCards ? 'chapter-card-track' : ''}`} aria-labelledby="project-heading">
+    <section className={`project-section ${chapterCards ? 'chapter-card-track' : ''} ${openSeries ? 'is-series-open' : ''}`} aria-labelledby="project-heading">
       <h2 className="project-track__sr-only" id="project-heading">프로젝트</h2>
 
       <div
@@ -344,7 +365,12 @@ function ProjectList({ chapterCards = false }: { chapterCards?: boolean }) {
               data-poster-index={index}
               aria-label={`${index + 1} / ${shelf.length}`}
             >
-              {project?.project ? <ProjectPoster {...project.project} number={index + 1} /> : project && 'chapterIndex' in project ?
+              {project && 'kind' in project ?
+                <button type="button" className="project-poster chapter-card chapter-card--series" onClick={() => onChoose?.(project.title)} aria-label={`${project.title} 시리즈 열기, 챕터 ${project.chapterCount}개`}
+                  style={{ '--poster-hue': project.hue, '--poster-color': chapterCardColor(project.category, 0, 1) } as CSSProperties}>
+                  <div className="series-cover"><span className="chapter-card__category">{project.chapterCount} chapters</span>
+                  <div className="chapter-card__content"><strong className="chapter-card__title">{project.title}</strong></div><div className="chapter-card__notation">{project.chapters.slice(0, 3).map(chapter => chapter.title).join('\n') + (project.chapterCount > 3 ? `\n+${project.chapterCount - 3}` : '')}</div><div className="chapter-card__footer"><span className="chapter-card__number">{String(project.chapterCount).padStart(2, '0')}</span><span className="chapter-card__open" aria-hidden="true">→</span></div></div>
+                </button> : project?.project ? <ProjectPoster {...project.project} number={index + 1} /> : project && 'chapterIndex' in project ?
                 <a className="project-poster chapter-card" href={project.href} data-transition-href={project.href} data-poster-title={project.title} data-poster-number={`${project.chapterIndex + 1}p`} aria-label={`${project.category} ${project.chapterIndex + 1}p ${bilingualChapterName(project.title)} 열기`}
                   style={{ '--poster-hue': project.hue, '--poster-color': chapterCardColor(project.category, project.chapterIndex, project.chapterCount) } as CSSProperties}>
                   <div className="series-cover"><span className="chapter-card__category">{project.category}</span>
@@ -356,15 +382,16 @@ function ProjectList({ chapterCards = false }: { chapterCards?: boolean }) {
         </ul>
       </div>
 
+      {openSeries && <div className="project-track__series"><button type="button" onClick={() => onChoose?.(null)}>← 전체 시리즈</button></div>}
       <div className="project-track__controls">
-        <button type="button" onClick={() => snapTo(activeIndexRef.current - 1)} aria-label="이전 시리즈">
+        <button type="button" onClick={() => snapTo(activeIndexRef.current - 1)} aria-label={openSeries ? '이전 챕터' : '이전 시리즈'}>
           ←
         </button>
         <p aria-live="polite">
           <span>{String(activeIndex + 1).padStart(2, '0')}</span>
-          {shelf[activeIndex] && <><span className="project-track__divider">/</span><strong>{chapterCards ? shelf[activeIndex]!.category : shelf[activeIndex]!.title}</strong></>}
+          {openSeries ? <><span className="project-track__divider">/</span><strong>{openSeries}</strong></> : shelf[activeIndex] && <><span className="project-track__divider">/</span><strong>{chapterCards ? shelf[activeIndex]!.category : shelf[activeIndex]!.title}</strong></>}
         </p>
-        <button type="button" onClick={() => snapTo(activeIndexRef.current + 1)} aria-label="다음 시리즈">
+        <button type="button" onClick={() => snapTo(activeIndexRef.current + 1)} aria-label={openSeries ? '다음 챕터' : '다음 시리즈'}>
           →
         </button>
       </div>

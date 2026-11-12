@@ -65,6 +65,8 @@
 - Home has three series books: Data Structures, Concurrency, Booking System. Preserve the self-introduction and monogram.
 - Put the series title at the top and chapter links labeled 1p, 2p, etc. inside the cover. Selecting a chapter lifts its paper leaf diagonally upward, then unfolds into that existing simulator. Preserve direct hashes, touch/keyboard operation, and reduced-motion navigation.
 - Add future concepts as chapters within these books, not new standalone home cards.
+- Home chapter cards are grouped by series: the shelf first shows one stacked card per series (title, chapter count, first chapter names). Selecting it opens only that series' chapter cards, with a '← 전체 시리즈' button and Escape to return. Returning from a chapter reopens its series at that chapter.
+- Drop Commerce series (Stock Reservation, Drop Allocation, Purchase Slot, Idempotency Key) uses anatomy-style isometric figures built with the vendored kit in src/components/iso (MIT). Each figure is a physical mechanism whose motion is the concept; modes on 2p–4p let the viewer replay the wrong hypothesis.
 
 # Java series
 - User explicitly authorized a separate Java book while pausing booking work. Its chapters visualize code execution order: Constructor Chaining, super & this, Field Hiding. Show current source line, call stack, one object with inherited fields, and console output; distinguish return values from printing. Preserve Korean explanations and existing series.

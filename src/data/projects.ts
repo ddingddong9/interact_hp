@@ -15,6 +15,12 @@ export const projects = [
   { href: '#admission-control', title: 'Booking System', eyebrow: '', description: '', chapters: [
     { href: '#admission-control', title: 'Admission Control' },
   ] },
+  { href: '#drop-stock-reservation', title: 'Drop Commerce', eyebrow: '', description: '', chapters: [
+    { href: '#drop-stock-reservation', title: 'Stock Reservation' },
+    { href: '#drop-allocation', title: 'Drop Allocation' },
+    { href: '#drop-purchase-slot', title: 'Purchase Slot' },
+    { href: '#drop-idempotency-key', title: 'Idempotency Key' },
+  ] },
   { href: '#java-constructor-chaining', title: 'Java', eyebrow: '', description: '', chapters: [
     { href: '#java-constructor-chaining', title: 'Constructor Chaining' },
     { href: '#java-super-this', title: 'super & this' },

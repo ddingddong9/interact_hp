@@ -14,6 +14,10 @@ import HashTable from './pages/HashTable';
 import RaceCondition from './pages/RaceCondition';
 import LuaScript from './pages/LuaScript';
 import AdmissionControl from './pages/AdmissionControl';
+import StockReservation from './pages/StockReservation';
+import DropAllocation from './pages/DropAllocation';
+import PurchaseSlot from './pages/PurchaseSlot';
+import IdempotencyKey from './pages/IdempotencyKey';
 import StructureLab from './pages/StructureLab';
 import type { Kind } from './components/structures/model';
 
@@ -39,6 +43,10 @@ const titles: Record<string, string> = {
   '#race-condition': 'Race Condition',
   '#lua-script': 'Lua Script',
   '#admission-control': 'Admission Control',
+  '#drop-stock-reservation': 'Stock Reservation',
+  '#drop-allocation': 'Drop Allocation',
+  '#drop-purchase-slot': 'Purchase Slot',
+  '#drop-idempotency-key': 'Idempotency Key',
 };
 function getPage() {
   const hash = window.location.hash;
@@ -46,7 +54,7 @@ function getPage() {
 }
 function Page({ page }: { page: string }) {
   useEffect(() => { document.title = titles[page]; }, [page]);
-  return <><ThemeToggle visible={page === '#home'} />{page.startsWith('#theory-') ? <TheoryLearning key={page} kind={page.slice(8)} /> : page.startsWith('#python-') ? <Suspense fallback={null}><PythonExecution key={page} kind={page.slice(8)} /></Suspense> : page.startsWith('#c-') ? <CExecution key={page} kind={page.slice(3)} /> : page.startsWith('#java-') ? <JavaExecution key={page} kind={page.slice(6) as JavaKind} /> : page === '#home' ? <Home /> : page === '#hash-table' ? <HashTable /> : page === '#race-condition' ? <RaceCondition /> : page === '#lua-script' ? <LuaScript /> : page === '#admission-control' ? <AdmissionControl /> : <StructureLab key={page} kind={page.slice(1) as Kind} />}<ChapterNavigation page={page} /></>;
+  return <><ThemeToggle visible={page === '#home'} />{page.startsWith('#theory-') ? <TheoryLearning key={page} kind={page.slice(8)} /> : page.startsWith('#python-') ? <Suspense fallback={null}><PythonExecution key={page} kind={page.slice(8)} /></Suspense> : page.startsWith('#c-') ? <CExecution key={page} kind={page.slice(3)} /> : page.startsWith('#java-') ? <JavaExecution key={page} kind={page.slice(6) as JavaKind} /> : page === '#home' ? <Home /> : page === '#hash-table' ? <HashTable /> : page === '#race-condition' ? <RaceCondition /> : page === '#lua-script' ? <LuaScript /> : page === '#admission-control' ? <AdmissionControl /> : page === '#drop-stock-reservation' ? <StockReservation /> : page === '#drop-allocation' ? <DropAllocation /> : page === '#drop-purchase-slot' ? <PurchaseSlot /> : page === '#drop-idempotency-key' ? <IdempotencyKey /> : <StructureLab key={page} kind={page.slice(1) as Kind} />}<ChapterNavigation page={page} /></>;
 }
 export default function App() {
   return <PageTransition getPage={getPage}>{page => <Page page={page} />}</PageTransition>;
