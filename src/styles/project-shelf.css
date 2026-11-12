@@ -370,3 +370,13 @@
 .chapter-card__footer { height:46px; flex-shrink:0; border-top:1px solid color-mix(in srgb,var(--poster-ink) 20%,transparent); }
 .chapter-card__number { font-size:22px; line-height:28px; opacity:1; }
 .chapter-card__open { opacity:.65; }
+
+/* 시리즈 카드: 챕터 카드 묶음처럼 뒤에 두 장이 비친다 */
+.chapter-card-track button.chapter-card { width:100%; text-align:left; font:inherit; cursor:pointer; -webkit-appearance:none; appearance:none; }
+.chapter-card-track .chapter-card--series>.series-cover { box-shadow:5px -5px 0 -1px color-mix(in srgb,var(--poster-color) 78%,var(--site-bg)),10px -10px 0 -2px color-mix(in srgb,var(--poster-color) 55%,var(--site-bg)),0 8px 24px #00000014; }
+.chapter-card--series .chapter-card__open { opacity:.45; }
+.project-track__series { display:flex; justify-content:center; margin:-8px 0 8px; }
+.project-track__series button { border:1px solid var(--site-border); background:transparent; color:var(--site-text); border-radius:999px; padding:8px 16px; min-height:40px; font:400 14px/1 "Noto Sans KR",Arial,sans-serif; cursor:pointer; }
+.project-track__series button:hover { border-color:var(--site-text); }
+.project-track__series button:focus-visible { outline:2px solid var(--site-text); outline-offset:3px; }
+.chapter-card-track.is-series-open .chapter-card--empty>.series-cover { background:transparent; border:1px dashed var(--site-border); box-shadow:none; }
